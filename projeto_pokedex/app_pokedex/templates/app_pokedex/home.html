@@ -124,17 +124,10 @@
       return valido;
     }
 
+    function mostrar(id, data) {
+    }
+
     async function criarPokemon() {
-      const OK = validar([
-        { id: 'criar-name', msg: 'Nome é obrigatório' },
-        { id: 'criar-type1', msg: 'Tipo 1 é obrigatório' },
-        { id: 'criar-hp', msg: 'HP é obrigatório' },
-        { id: 'criar-attack', msg: 'Ataque é obrigatório' },
-        { id: 'criar-defense', msg: 'Defesa é obrigatória' },
-        { id: 'criar-speed', msg: 'Velocidade é obrigatória' },
-        { id: 'criar-abilities', msg: 'Habilidades são obrigatórias' },
-      ]);
-      if (!OK) return;
     
       const BASE_URL = '/api/pokebag/';
       const NAME = document.getElementById('criar-name').value;
@@ -167,17 +160,6 @@
     }
 
     async function editarPokemon() {
-      
-      const OK = validar([
-        { id: 'criar-name', msg: 'Nome é obrigatório' },
-        { id: 'criar-type1', msg: 'Tipo 1 é obrigatório' },
-        { id: 'criar-hp', msg: 'HP é obrigatório' },
-        { id: 'criar-attack', msg: 'Ataque é obrigatório' },
-        { id: 'criar-defense', msg: 'Defesa é obrigatória' },
-        { id: 'criar-speed', msg: 'Velocidade é obrigatória' },
-        { id: 'criar-abilities', msg: 'Habilidades são obrigatórias' },
-      ]);
-      if (!OK) return;
 
       const ID = document.getElementById('editar-id').value;
       const NAME = document.getElementById('editar-name').value;

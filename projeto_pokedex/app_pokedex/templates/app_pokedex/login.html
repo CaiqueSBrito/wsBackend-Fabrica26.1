@@ -54,23 +54,8 @@
   </main>
 
   <script>
-    
+
     function validar(campos) {
-      let valido = true;
-      campos.forEach(({ id, msg }) => {
-        const el = document.getElementById(id);
-        const aviso = document.getElementById(`aviso-${id}`);
-        if (!el.value.trim()) {
-          aviso.textContent = msg || 'Campo obrigatório';
-          aviso.style.display = 'block';
-          valido = false;
-        } else {
-          aviso.textContent = '';
-          aviso.style.display = 'none';
-        }
-      });
-      return valido;
-    }
 
     function getCookie(name) {
       return document.cookie.split('; ')
@@ -79,12 +64,7 @@
     }
 
     async function entrar() {
-        const ok = validar([
-        { id: 'email', msg: 'Email é obrigatório' },
-        { id: 'senha', msg: 'Senha é obrigatório' },
-        ]);
 
-        if (!ok) return;
         const email = document.getElementById('email').value;
         const senha = document.getElementById('senha').value;
         const erro  = document.getElementById('erro');
