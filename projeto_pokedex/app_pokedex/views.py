@@ -10,6 +10,7 @@ from django.core.cache import cache as django_cache
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from django.http import JsonResponse
+from django.views.decorators.csrf import ensure_csrf_cookie
 
 def home(request):
     return render(request, 'app_pokedex/home.html')
