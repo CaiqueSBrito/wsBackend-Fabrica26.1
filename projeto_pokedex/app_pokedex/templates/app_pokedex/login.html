@@ -61,29 +61,28 @@
     }
 
     async function entrar() {
-      const email = document.getElementById('email').value;
-      const senha = document.getElementById('senha').value;
-      const erro  = document.getElementById('erro');
+    const email = document.getElementById('email').value;
+    const senha = document.getElementById('senha').value;
+    const erro  = document.getElementById('erro');
 
-      const res = await fetch('/login/', {
+    const res = await fetch('/login/', {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json',
-          'X-CSRFToken': getCookie('csrftoken'),
+            'Content-Type': 'application/json',
+            'X-CSRFToken': getCookie('csrftoken'),
         },
         body: JSON.stringify({ email, senha })
-      });
+    });
 
-      const data = await res.json();
+    const data = await res.json();
 
-      if (res.ok || res.redirected) {
+    if (res.ok) {
         window.location.href = '/';
     } else {
-        const data = await res.json();
-        erro.textContent = '✖ ' + (data.erro || 'Erro');
+        erro.textContent = '✖ ' + (data.erro || 'Erro ao entrar');
         erro.style.display = 'block';
-}
     }
+}
   </script>
 
 </body>
