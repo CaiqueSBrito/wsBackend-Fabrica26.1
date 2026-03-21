@@ -107,10 +107,35 @@
   <script>
     const BASE_URL = '/api/pokebag/'
 
-    function mostrar(id, data) {
+    function validar(campos) {
+      let valido = true;
+      campos.forEach(({ id, msg }) => {
+        const el = document.getElementById(id);
+        const aviso = document.getElementById(`aviso-${id}`);
+        if (!el.value.trim()) {
+          aviso.textContent = msg || 'Campo obrigatório';
+          aviso.style.display = 'block';
+          valido = false;
+        } else {
+          aviso.textContent = '';
+          aviso.style.display = 'none';
+        }
+      });
+      return valido;
     }
 
     async function criarPokemon() {
+      const OK = validar([
+        { id: 'criar-name', msg: 'Nome é obrigatório' },
+        { id: 'criar-type1', msg: 'Tipo 1 é obrigatório' },
+        { id: 'criar-hp', msg: 'HP é obrigatório' },
+        { id: 'criar-attack', msg: 'Ataque é obrigatório' },
+        { id: 'criar-defense', msg: 'Defesa é obrigatória' },
+        { id: 'criar-speed', msg: 'Velocidade é obrigatória' },
+        { id: 'criar-abilities', msg: 'Habilidades são obrigatórias' },
+      ]);
+      if (!OK) return;
+    
       const BASE_URL = '/api/pokebag/';
       const NAME = document.getElementById('criar-name').value;
       const SPRITES = document.getElementById('criar-sprites').files[0];
@@ -121,7 +146,7 @@
       const DEFENSE = document.getElementById('criar-defense').value;
       const SPEED = document.getElementById('criar-speed').value;
       const ABILITIES = document.getElementById('criar-abilities').value;
-
+    
       const FORM_DATA = new FormData();
       FORM_DATA.append('name', NAME);
       if (SPRITES) {
@@ -134,14 +159,26 @@
       FORM_DATA.append('defense', DEFENSE);
       FORM_DATA.append('speed', SPEED);
       FORM_DATA.append('abilities', ABILITIES);
-
+    
       const CSRF = document.cookie.split('; ').find(row => row.startsWith('csrftoken=')).split('=')[1];
       const RESPONSE = await fetch(BASE_URL, { method: 'POST', body: FORM_DATA, headers: { 'X-CSRFToken': CSRF } });
-      const DATA = await RESPONSE.json(); 
+      const DATA = await RESPONSE.json();
       window.location.href = `/pokemon/${DATA.id}/`;
     }
 
     async function editarPokemon() {
+      
+      const OK = validar([
+        { id: 'criar-name', msg: 'Nome é obrigatório' },
+        { id: 'criar-type1', msg: 'Tipo 1 é obrigatório' },
+        { id: 'criar-hp', msg: 'HP é obrigatório' },
+        { id: 'criar-attack', msg: 'Ataque é obrigatório' },
+        { id: 'criar-defense', msg: 'Defesa é obrigatória' },
+        { id: 'criar-speed', msg: 'Velocidade é obrigatória' },
+        { id: 'criar-abilities', msg: 'Habilidades são obrigatórias' },
+      ]);
+      if (!OK) return;
+
       const ID = document.getElementById('editar-id').value;
       const NAME = document.getElementById('editar-name').value;
       const TYPE1 = document.getElementById('editar-type1').value;
@@ -166,7 +203,7 @@
       const CSRF = document.cookie.split('; ').find(row => row.startsWith('csrftoken=')).split('=')[1];
       const RESPONSE = await fetch(`${BASE_URL}${ID}/`, { method: 'PATCH', body: FORM_DATA, headers: { 'X-CSRFToken': CSRF } });
       if (RESPONSE.status === 204) {
-        alert('Pokémon atualizado com sucesso!');
+        alert('Pokémon deletado com sucesso!');
       }
       const DATA = await RESPONSE.json();
     }
@@ -181,7 +218,6 @@
       }
     }
 
-    // ─── MEUS POKÉMONS ───
     async function carregarMeusPokemons() {
       const container = document.getElementById('meus-pokemons');
       const res = await fetch(BASE_URL);

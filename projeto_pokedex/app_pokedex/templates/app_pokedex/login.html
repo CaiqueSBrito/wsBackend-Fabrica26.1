@@ -54,6 +54,24 @@
   </main>
 
   <script>
+    
+    function validar(campos) {
+      let valido = true;
+      campos.forEach(({ id, msg }) => {
+        const el = document.getElementById(id);
+        const aviso = document.getElementById(`aviso-${id}`);
+        if (!el.value.trim()) {
+          aviso.textContent = msg || 'Campo obrigatório';
+          aviso.style.display = 'block';
+          valido = false;
+        } else {
+          aviso.textContent = '';
+          aviso.style.display = 'none';
+        }
+      });
+      return valido;
+    }
+
     function getCookie(name) {
       return document.cookie.split('; ')
         .find(r => r.startsWith(name + '='))
@@ -61,16 +79,22 @@
     }
 
     async function entrar() {
-    const email = document.getElementById('email').value;
-    const senha = document.getElementById('senha').value;
-    const erro  = document.getElementById('erro');
+        const ok = validar([
+        { id: 'email', msg: 'Email é obrigatório' },
+        { id: 'senha', msg: 'Senha é obrigatório' },
+        ]);
 
-    const res = await fetch('/login/', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            'X-CSRFToken': getCookie('csrftoken'),
-        },
+        if (!ok) return;
+        const email = document.getElementById('email').value;
+        const senha = document.getElementById('senha').value;
+        const erro  = document.getElementById('erro');
+
+        const res = await fetch('/login/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': getCookie('csrftoken'),
+            },
         body: JSON.stringify({ email, senha })
     });
 

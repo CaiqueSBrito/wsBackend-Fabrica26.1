@@ -2,7 +2,7 @@
 <html lang="pt-br">
 <head>
   <meta charset="UTF-8">
-  <title>Pokédex — Detalhes</title>
+  <title>{{ pokemon.name }} — Pokédex</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Outfit:wght@300;400;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/static/app_pokedex/css/style.css">
@@ -16,7 +16,7 @@
   <header class="header">
     <div class="header-details">
       <a href="/pokemons/" class="back-btn">← Voltar</a>
-      <h1 class="header-title" id="pokemon-nome">...</h1>
+      <h1 class="header-title">{{ pokemon.name }}</h1>
       <div class="logo-dot"></div>
     </div>
   </header>
@@ -26,21 +26,23 @@
 
       <div class="portrait-card">
         <div class="pokemon-img-wrap">
-          <img class="pokemon-img" id="pokemon-sprite" src="" alt="" style="display:none;">
-          <div class="pokemon-no-img" id="pokemon-no-sprite" style="display:none;">SEM<br>SPRITE</div>
+          {% if pokemon.sprite_img %}
+            <img class="pokemon-img" src="{{ pokemon.sprite_img }}" alt="{{ pokemon.name }}">
+          {% else %}
+            <div class="pokemon-no-img">SEM<br>SPRITE</div>
+          {% endif %}
         </div>
 
-        <h2 class="pokemon-name-big" id="pokemon-nome-card"></h2>
-        <div class="type-badges" id="pokemon-tipos"></div>
-        <p class="id-badge" id="pokemon-id"></p>
+        <h2 class="pokemon-name-big">{{ pokemon.name }}</h2>
 
-        </div> <!-- fecha portrait-card -->
+        <div class="type-badges">
+          <span class="type-badge type-{{ pokemon.type1|lower }}">{{ pokemon.type1 }}</span>
+          {% if pokemon.type2 %}
+            <span class="type-badge type-{{ pokemon.type2|lower }}">{{ pokemon.type2 }}</span>
+          {% endif %}
+        </div>
 
-      <div style="margin-top: 16px; text-align: center;">
-        <button class="btn btn-accent" onclick="capturar()">
-          <span class="btn-icon">✦</span> Capturar
-        </button>
-        <div id="resultado-captura" style="margin-top: 10px;"></div>
+        <p class="id-badge">#{{ pokemon.id }}</p>
       </div>
 
       <div class="stats-panel">
@@ -50,145 +52,51 @@
 
           <div class="stat-row">
             <span class="stat-label">HP</span>
-            <span class="stat-value" id="val-hp">—</span>
+            <span class="stat-value">{{ pokemon.hp }}</span>
             <div class="stat-bar-wrap">
-              <div class="stat-bar hp" id="bar-hp" style="width:0%"></div>
+              <div class="stat-bar hp" style="width: {% widthratio pokemon.hp 255 100 %}%"></div>
             </div>
           </div>
 
           <div class="stat-row">
             <span class="stat-label">ATAQUE</span>
-            <span class="stat-value" id="val-attack">—</span>
+            <span class="stat-value">{{ pokemon.attack }}</span>
             <div class="stat-bar-wrap">
-              <div class="stat-bar attack" id="bar-attack" style="width:0%"></div>
+              <div class="stat-bar attack" style="width: {% widthratio pokemon.attack 255 100 %}%"></div>
             </div>
           </div>
 
           <div class="stat-row">
             <span class="stat-label">DEFESA</span>
-            <span class="stat-value" id="val-defense">—</span>
+            <span class="stat-value">{{ pokemon.defense }}</span>
             <div class="stat-bar-wrap">
-              <div class="stat-bar defense" id="bar-defense" style="width:0%"></div>
+              <div class="stat-bar defense" style="width: {% widthratio pokemon.defense 255 100 %}%"></div>
             </div>
           </div>
 
           <div class="stat-row">
             <span class="stat-label">VELOC.</span>
-            <span class="stat-value" id="val-speed">—</span>
+            <span class="stat-value">{{ pokemon.speed }}</span>
             <div class="stat-bar-wrap">
-              <div class="stat-bar speed" id="bar-speed" style="width:0%"></div>
+              <div class="stat-bar speed" style="width: {% widthratio pokemon.speed 255 100 %}%"></div>
             </div>
           </div>
         </div>
 
-        <div class="info-card" id="card-habilidades" style="display:none;">
+        {% if pokemon.abilities %}
+        <div class="info-card">
           <p class="section-label">HABILIDADES</p>
-          <div class="abilities-list" id="pokemon-habilidades"></div>
+          <div class="abilities-list">
+            {% for ability in pokemon.abilities.split %}
+              <span class="ability-tag">{{ ability }}</span>
+            {% endfor %}
+          </div>
         </div>
+        {% endif %}
 
       </div>
     </div>
   </main>
-
-  <script>
-    const id = window.location.pathname.split('/').filter(Boolean).pop();
-    let pokemonData = null;
-
-    function getCookie(name) {
-      return document.cookie.split('; ')
-        .find(r => r.startsWith(name + '='))?.split('=')[1];
-    }
-
-    const getStat = name => pokemonData.stats.find(s => s.stat.name === name)?.base_stat || 0;
-
-    async function carregarPokemon() {
-      const res = await fetch(`https://pokeapi.co/api/v2/pokemon/${id}/`);
-      pokemonData = await res.json();
-      const d = pokemonData;
-
-      document.title = `${d.name} — Pokédex`;
-      document.getElementById('pokemon-nome').textContent = d.name;
-      document.getElementById('pokemon-nome-card').textContent = d.name;
-      document.getElementById('pokemon-id').textContent = `#${String(d.id).padStart(4, '0')}`;
-
-      // sprite
-      if (d.sprites.front_default) {
-        const img = document.getElementById('pokemon-sprite');
-        img.src = d.sprites.front_default;
-        img.alt = d.name;
-        img.style.display = 'block';
-      } else {
-        document.getElementById('pokemon-no-sprite').style.display = 'flex';
-      }
-
-      // tipos
-      const tipos = document.getElementById('pokemon-tipos');
-      d.types.forEach(t => {
-        const badge = document.createElement('span');
-        badge.className = `type-badge type-${t.type.name}`;
-        badge.textContent = t.type.name;
-        tipos.appendChild(badge);
-      });
-
-      // stats
-      const hp      = getStat('hp');
-      const attack  = getStat('attack');
-      const defense = getStat('defense');
-      const speed   = getStat('speed');
-
-      document.getElementById('val-hp').textContent      = hp;
-      document.getElementById('val-attack').textContent  = attack;
-      document.getElementById('val-defense').textContent = defense;
-      document.getElementById('val-speed').textContent   = speed;
-
-      document.getElementById('bar-hp').style.width      = `${Math.round(hp / 255 * 100)}%`;
-      document.getElementById('bar-attack').style.width  = `${Math.round(attack / 255 * 100)}%`;
-      document.getElementById('bar-defense').style.width = `${Math.round(defense / 255 * 100)}%`;
-      document.getElementById('bar-speed').style.width   = `${Math.round(speed / 255 * 100)}%`;
-
-      // habilidades
-      if (d.abilities.length) {
-        const lista = document.getElementById('pokemon-habilidades');
-        d.abilities.forEach(a => {
-          const tag = document.createElement('span');
-          tag.className = 'ability-tag';
-          tag.textContent = a.ability.name;
-          lista.appendChild(tag);
-        });
-        document.getElementById('card-habilidades').style.display = 'block';
-      }
-    }
-
-    async function capturar() {
-      const d = pokemonData;
-      if (!d) return;
-
-      const FORM_DATA = new FormData();
-      FORM_DATA.append('name',      d.name);
-      FORM_DATA.append('type1',     d.types[0].type.name);
-      FORM_DATA.append('type2',     d.types[1]?.type.name || '');
-      FORM_DATA.append('hp',        getStat('hp'));
-      FORM_DATA.append('attack',    getStat('attack'));
-      FORM_DATA.append('defense',   getStat('defense'));
-      FORM_DATA.append('speed',     getStat('speed'));
-      FORM_DATA.append('abilities', d.abilities.map(a => a.ability.name).join(' '));
-
-      const res = await fetch('/api/pokebag/', {
-        method: 'POST',
-        headers: { 'X-CSRFToken': getCookie('csrftoken') },
-        body: FORM_DATA
-      });
-
-      const resultado = document.getElementById('resultado-captura');
-      if (res.ok) {
-        resultado.innerHTML = '<div class="alert alert-success">✔ Pokémon capturado!</div>';
-      } else {
-        resultado.innerHTML = '<div class="alert alert-error">✖ Faça login para capturar.</div>';
-      }
-    }
-
-    carregarPokemon();
-  </script>
 
 </body>
 </html>
