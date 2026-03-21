@@ -1,14 +1,12 @@
 from django.db import models
+from django.contrib.auth.models import User
 import uuid
-# Create your models here.
 
-class Usuarios(models.Model):
-    nome = models.CharField(max_length=100)
-    email = models.EmailField(unique=True)
-    senha = models.CharField(max_length=100)
+
 
 class Pokemon(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=True)
+    usuario = models.ForeignKey(User, on_delete=models.CASCADE, related_name='pokemons')
     name = models.CharField(max_length=100)
     sprites = models.TextField(null=True, blank=True)
     sprite_img = models.ImageField(upload_to='sprites/', null=True, blank=True)

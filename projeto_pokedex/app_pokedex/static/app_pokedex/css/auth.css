@@ -1,0 +1,96 @@
+/* ─── AUTH PAGE ─── */
+.auth-page {
+  min-height: calc(100vh - 80px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 24px;
+}
+
+.auth-card {
+  background: var(--gray);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 48px 40px;
+  width: 100%;
+  max-width: 420px;
+  position: relative;
+  overflow: hidden;
+  animation: card-in 0.5s ease both;
+}
+
+.auth-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+  background: var(--red);
+}
+
+.auth-icon {
+  font-size: 28px;
+  color: var(--red);
+  text-align: center;
+  margin-bottom: 16px;
+  animation: pulse-dot 2s ease-in-out infinite;
+}
+
+.auth-title {
+  font-family: 'Press Start 2P', monospace;
+  font-size: clamp(14px, 2vw, 18px);
+  color: var(--white);
+  text-align: center;
+  margin-bottom: 8px;
+  line-height: 1.6;
+}
+
+.auth-subtitle {
+  font-size: 13px;
+  color: #666;
+  text-align: center;
+  margin-bottom: 32px;
+}
+
+/* ─── FORM ─── */
+.auth-form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.form-label {
+  font-family: 'Press Start 2P', monospace;
+  font-size: 9px;
+  color: #888;
+  letter-spacing: 1px;
+}
+
+.btn-full {
+  width: 100%;
+  justify-content: center;
+  margin-top: 8px;
+}
+
+/* ─── LINK ─── */
+.auth-link {
+  font-size: 13px;
+  color: #666;
+  text-align: center;
+  margin-top: 24px;
+}
+
+.auth-link a {
+  color: var(--red-light);
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+.auth-link a:hover {
+  color: var(--red);
+}

@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <title>Pokédex — Registro</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Outfit:wght@300;400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/static/app_pokedex/css/style.css">
+  <link rel="stylesheet" href="/static/app_pokedex/css/animations.css">
+  <link rel="stylesheet" href="/static/app_pokedex/css/auth.css">
+</head>
+<body>
+
+  <div class="scanline"></div>
+  <div class="noise"></div>
+
+  <header class="header">
+    <div class="header-inner">
+      <div class="logo-dot"></div>
+      <h1 class="logo-text">POKÉDEX</h1>
+      <div class="logo-dot"></div>
+    </div>
+  </header>
+
+  <main class="auth-page">
+    <div class="auth-card">
+
+      <div class="auth-icon">✦</div>
+      <h2 class="auth-title">Criar Conta</h2>
+      <p class="auth-subtitle">Comece sua jornada</p>
+
+      <div id="erro" class="alert alert-error" style="display:none;"></div>
+
+      <div class="auth-form">
+        <div class="form-group">
+          <label class="form-label">Username</label>
+          <input class="input input-full" type="text" id="username" placeholder="Treinador123">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Email</label>
+          <input class="input input-full" type="email" id="email" placeholder="seu@email.com">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Senha</label>
+          <input class="input input-full" type="password" id="senha" placeholder="••••••••">
+        </div>
+        <button class="btn btn-accent btn-full" onclick="registrar()">
+          <span class="btn-icon">▶</span> Criar conta
+        </button>
+      </div>
+
+      <p class="auth-link">
+        Já tem conta? <a href="/login/">Entrar</a>
+      </p>
+
+    </div>
+  </main>
+
+  <script>
+    function getCookie(name) {
+      return document.cookie.split('; ')
+        .find(r => r.startsWith(name + '='))
+        ?.split('=')[1];
+    }
+
+    async function registrar() {
+      const username = document.getElementById('username').value;
+      const email    = document.getElementById('email').value;
+      const senha    = document.getElementById('senha').value;
+      const erro     = document.getElementById('erro');
+
+      const res = await fetch('/registro/', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-CSRFToken': getCookie('csrftoken'),
+        },
+        body: JSON.stringify({ username, email, senha })
+      });
+
+      const data = await res.json();
+
+    if (res.ok || res.redirected) {
+        window.location.href = '/';
+    } else {
+        const data = await res.json();
+        erro.textContent = '✖ ' + (data.erro || 'Erro');
+        erro.style.display = 'block';
+    }
+    }
+  </script>
+
+</body>
+</html>

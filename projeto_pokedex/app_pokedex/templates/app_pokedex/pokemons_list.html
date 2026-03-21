@@ -31,15 +31,20 @@
     </div>
 
     <div id="lista-pokemons" class="resultado-grid" style="display:none;"></div>
+    <div class="paginacao">
+      <button class="btn btn-primary" id="btn-anterior">◀ Anterior</button>
+      <button class="btn btn-primary" id="btn-proximo">Próximo ▶</button>
+    </div>
 
   </main>
 
   <script>
-    const CACHE_KEY = 'pokemon_cache';
+    let offset = 0;
+    const limit = 20;
 
     async function carregarDaApi() {
-      const response = await fetch('/poke_list/');
-      const data = await response.json();
+      const res = await fetch(`/poke_list/?limit=${limit}&offset=${offset}`);
+      const data = await res.json();
       return data;
     }
 
@@ -51,7 +56,7 @@
 
       pokemons.forEach(pokemon => {
         const card = document.createElement('a');
-        card.href = `https://pokeapi.co/api/v2/pokemon/${pokemon.id}/`;
+        card.href = `/pokemons/${pokemon.id}/`;
         card.className = 'pokemon-card';
         card.innerHTML = `
           ${pokemon.sprite
@@ -68,14 +73,29 @@
       container.style.display = 'grid';
     }
 
+    function atualizarBotoes(count) {
+      document.getElementById('btn-anterior').disabled = offset === 0;
+      document.getElementById('btn-proximo').disabled = offset + limit >= count;
+    }
+
+    document.getElementById('btn-proximo').onclick = async () => {
+      offset += limit;
+      const data = await carregarDaApi();
+      renderizar(data.results);
+      atualizarBotoes(data.count);
+    };
+
+    document.getElementById('btn-anterior').onclick = async () => {
+      offset -= limit;
+      const data = await carregarDaApi();
+      renderizar(data.results);
+      atualizarBotoes(data.count);
+    };
+
     async function init() {
-      const CACHE = localStorage.getItem(CACHE_KEY);
-      if (CACHE) {
-        renderizar(JSON.parse(CACHE));
-        return;
-      }
-      const todos = await carregarDaApi();
-      renderizar(todos);
+      const data = await carregarDaApi();
+      renderizar(data.results);
+      atualizarBotoes(data.count);
     }
 
     init();

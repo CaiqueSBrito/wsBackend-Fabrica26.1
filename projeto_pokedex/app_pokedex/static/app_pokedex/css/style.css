@@ -598,4 +598,12 @@ input[type="file"]::file-selector-button {
   transition: border-color 0.2s, color 0.2s;
 }
 
+.paginacao {
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+  margin-top: 40px;
+  padding-bottom: 60px;
+}
+
 .ability-tag:hover { border-color: var(--red); color: var(--white); }

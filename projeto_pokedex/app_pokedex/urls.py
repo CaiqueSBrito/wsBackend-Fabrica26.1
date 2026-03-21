@@ -12,4 +12,9 @@ urlpatterns = [
     path('api/', include(router.urls)),
     path('pokemon/<uuid:id>/', views.pokemon_details, name='pokemon_details'),
     path('poke_list/', views.PokeAPIListView.as_view(), name='poke_list'),    
+    path('pokemons/', views.pokemons_list, name='pokemons_list'),
+    path('pokemons/<int:pokemon_id>/', views.poke_detail, name='poke_detail'),
+    path('registro/', views.registro, name='registro'),
+    path('login/', views.entrar, name='login'),
+    path('logout/', views.sair, name='logout'),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

@@ -1,13 +1,12 @@
-{% load static %}
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
   <meta charset="UTF-8">
-  <title>{{ pokemon.name }} — Pokédex</title>
+  <title>Pokédex — Detalhes</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Outfit:wght@300;400;600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="{% static 'app_pokedex/css/style.css' %}">
-  <link rel="stylesheet" href="{% static 'app_pokedex/css/animations.css' %}">
+  <link rel="stylesheet" href="/static/app_pokedex/css/style.css">
+  <link rel="stylesheet" href="/static/app_pokedex/css/animations.css">
 </head>
 <body>
 
@@ -17,7 +16,7 @@
   <header class="header">
     <div class="header-details">
       <a href="/" class="back-btn">← Voltar</a>
-      <h1 class="header-title">{{ pokemon.name }}</h1>
+      <h1 class="header-title" id="pokemon-nome">...</h1>
       <div class="logo-dot"></div>
     </div>
   </header>
@@ -27,80 +26,121 @@
 
       <div class="portrait-card">
         <div class="pokemon-img-wrap">
-          {% if pokemon.sprite_img %}
-            <img class="pokemon-img" src="{{ pokemon.sprite_img.url }}" alt="{{ pokemon.name }}">
-          {% else %}
-            <div class="pokemon-no-img">SEM<br>SPRITE</div>
-          {% endif %}
+          <img class="pokemon-img" id="pokemon-sprite" src="" alt="" style="display:none;">
+          <div class="pokemon-no-img" id="pokemon-no-sprite" style="display:none;">SEM<br>SPRITE</div>
         </div>
 
-        <h2 class="pokemon-name-big">{{ pokemon.name }}</h2>
+        <h2 class="pokemon-name-big" id="pokemon-nome-card"></h2>
 
-        <div class="type-badges">
-          {% with t1=pokemon.type1|lower %}
-            <span class="type-badge type-{{ t1 }}">{{ pokemon.type1 }}</span>
-          {% endwith %}
-          {% if pokemon.type2 %}
-            {% with t2=pokemon.type2|lower %}
-              <span class="type-badge type-{{ t2 }}">{{ pokemon.type2 }}</span>
-            {% endwith %}
-          {% endif %}
-        </div>
+        <div class="type-badges" id="pokemon-tipos"></div>
 
-        <p class="id-badge">{{ pokemon.id }}</p>
+        <p class="id-badge" id="pokemon-id"></p>
       </div>
 
       <div class="stats-panel">
 
         <div class="info-card">
           <p class="section-label">BASE STATS</p>
-        
+
           <div class="stat-row">
             <span class="stat-label">HP</span>
-            <span class="stat-value">{{ pokemon.hp }}</span>
+            <span class="stat-value" id="val-hp">—</span>
             <div class="stat-bar-wrap">
-            <div class="stat-bar hp" style="width: {{ stats.hp }}%"></div>
+              <div class="stat-bar hp" id="bar-hp" style="width:0%"></div>
             </div>
           </div>
 
           <div class="stat-row">
             <span class="stat-label">ATAQUE</span>
-            <span class="stat-value">{{ pokemon.attack }}</span>
+            <span class="stat-value" id="val-attack">—</span>
             <div class="stat-bar-wrap">
-            <div class="stat-bar attack" style="width: {{ stats.attack }}%"></div>
+              <div class="stat-bar attack" id="bar-attack" style="width:0%"></div>
             </div>
           </div>
 
           <div class="stat-row">
             <span class="stat-label">DEFESA</span>
-            <span class="stat-value">{{ pokemon.defense }}</span>
+            <span class="stat-value" id="val-defense">—</span>
             <div class="stat-bar-wrap">
-            <div class="stat-bar defense" style="width: {{ stats.defense }}%"></div>
+              <div class="stat-bar defense" id="bar-defense" style="width:0%"></div>
             </div>
           </div>
 
           <div class="stat-row">
             <span class="stat-label">VELOC.</span>
-            <span class="stat-value">{{ pokemon.speed }}</span>
+            <span class="stat-value" id="val-speed">—</span>
             <div class="stat-bar-wrap">
-            <div class="stat-bar speed" style="width: {{ stats.speed }}%"></div>
-  </div>
-</div>
-
-        {% if pokemon.abilities %}
-        <div class="info-card">
-          <p class="section-label">HABILIDADES</p>
-          <div class="abilities-list">
-            {% for ability in pokemon.abilities.split %}
-              <span class="ability-tag">{{ ability }}</span>
-            {% endfor %}
+              <div class="stat-bar speed" id="bar-speed" style="width:0%"></div>
+            </div>
           </div>
         </div>
-        {% endif %}
+
+        <div class="info-card" id="card-habilidades" style="display:none;">
+          <p class="section-label">HABILIDADES</p>
+          <div class="abilities-list" id="pokemon-habilidades"></div>
+        </div>
 
       </div>
     </div>
   </main>
+
+  <script>
+    const id = window.location.pathname.split('/').filter(Boolean).pop();
+
+    async function carregarPokemon() {
+      const res = await fetch(`/api/pokebag/${id}/`);
+      const p = await res.json();
+
+      document.title = `${p.name} — Pokédex`;
+      document.getElementById('pokemon-nome').textContent = p.name;
+      document.getElementById('pokemon-nome-card').textContent = p.name;
+      document.getElementById('pokemon-id').textContent = p.id;
+
+      // sprite
+      if (p.sprite_img) {
+        const sprite = document.getElementById('pokemon-sprite');
+        sprite.src = p.sprite_img;
+        sprite.alt = p.name;
+        sprite.style.display = 'block';
+      } else {
+        document.getElementById('pokemon-no-sprite').style.display = 'flex';
+      }
+
+      // tipos
+      const tipos = document.getElementById('pokemon-tipos');
+      [p.type1, p.type2].filter(Boolean).forEach(tipo => {
+        const badge = document.createElement('span');
+        badge.className = `type-badge type-${tipo.toLowerCase()}`;
+        badge.textContent = tipo;
+        tipos.appendChild(badge);
+      });
+
+      // stats
+      document.getElementById('val-hp').textContent     = p.hp;
+      document.getElementById('val-attack').textContent  = p.attack;
+      document.getElementById('val-defense').textContent = p.defense;
+      document.getElementById('val-speed').textContent   = p.speed;
+
+      document.getElementById('bar-hp').style.width      = `${Math.round(p.hp / 255 * 100)}%`;
+      document.getElementById('bar-attack').style.width  = `${Math.round(p.attack / 255 * 100)}%`;
+      document.getElementById('bar-defense').style.width = `${Math.round(p.defense / 255 * 100)}%`;
+      document.getElementById('bar-speed').style.width   = `${Math.round(p.speed / 255 * 100)}%`;
+
+      // habilidades
+      if (p.abilities) {
+        const lista = document.getElementById('pokemon-habilidades');
+        p.abilities.split(' ').forEach(ability => {
+          const tag = document.createElement('span');
+          tag.className = 'ability-tag';
+          tag.textContent = ability;
+          lista.appendChild(tag);
+        });
+        document.getElementById('card-habilidades').style.display = 'block';
+      }
+    }
+
+    carregarPokemon();
+  </script>
 
 </body>
 </html>
