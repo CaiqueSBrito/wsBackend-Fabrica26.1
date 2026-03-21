@@ -1,0 +1,239 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <title>Pokédex</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Outfit:wght@300;400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{% static 'app_pokedex/css/style.css' %}">
+  <link rel="stylesheet" href="{% static 'app_pokedex/css/animations.css' %}">
+</head>
+<body>
+
+  <div class="scanline"></div>
+  <div class="noise"></div>
+
+  <header class="header">
+    <div class="header-inner">
+      <div class="logo-dot"></div>
+      <h1 class="logo-text">POKÉDEX</h1>
+      <div class="logo-dot"></div>
+    </div>
+  </header>
+
+  <main class="container">
+
+    <section class="card" id="section-listar">
+      <div class="card-label">01</div>
+      <h2 class="card-title">Listar Pokémons</h2>
+      <button class="btn btn-primary" onclick="window.location.href='/poke_list/'">
+      <span class="btn-icon">▶</span> Buscar todos
+      </button>
+      </button>
+      <div id="resultado-todos" class="resultado-grid"></div>
+    </section>
+
+    <section class="card" id="section-criar">
+      <div class="card-label">02</div>
+      <h2 class="card-title">Criar Pokémon</h2>
+      <div class="form-grid">
+        <input class="input" type="text" id="criar-name" placeholder="Nome">
+        <input class="input" type="file" id="criar-sprites">
+        <input class="input" type="text" id="criar-type1" placeholder="Tipo 1">
+        <input class="input" type="text" id="criar-type2" placeholder="Tipo 2 (opcional)">
+        <input class="input" type="number" id="criar-hp" placeholder="HP">
+        <input class="input" type="number" id="criar-attack" placeholder="Ataque">
+        <input class="input" type="number" id="criar-defense" placeholder="Defesa">
+        <input class="input" type="number" id="criar-speed" placeholder="Velocidade">
+        <input class="input input-full" type="text" id="criar-abilities" placeholder="Habilidades">
+      </div>
+      <button class="btn btn-accent" onclick="criarPokemon()">
+        <span class="btn-icon">✦</span> Criar
+      </button>
+      <div id="resultado-criar"></div>
+    </section>
+
+    <section class="card" id="section-meus" style="grid-column: 1 / -1;">
+      <div class="card-label">★</div>
+      <h2 class="card-title">Meus Pokémons</h2>
+      <div class="resultado-grid">
+        {% for pokemon in pokemons %}
+          <a href="{% url 'pokemon_details' id=pokemon.id %}" class="pokemon-card">
+            {% if pokemon.sprite_img %}
+              <img src="{{ pokemon.sprite_img.url }}" alt="{{ pokemon.name }}">
+            {% endif %}
+            <span class="pokemon-name">{{ pokemon.name }}</span>
+            <span class="pokemon-type">{{ pokemon.type1 }}{% if pokemon.type2 %} / {{ pokemon.type2 }}{% endif %}</span>
+          </a>
+        {% empty %}
+          <p class="empty-msg">Nenhum pokémon cadastrado ainda.</p>
+        {% endfor %}
+      </div>
+    </section>
+
+    <section class="card" id="section-editar">
+      <div class="card-label">03</div>
+      <h2 class="card-title">Editar Pokémon</h2>
+      <div class="form-grid">
+        <input class="input input-full" type="text" id="editar-id" placeholder="ID do Pokémon (UUID)">
+        <input class="input" type="text" id="editar-name" placeholder="Nome">
+        <input class="input" type="text" id="editar-type1" placeholder="Tipo 1">
+        <input class="input" type="text" id="editar-type2" placeholder="Tipo 2 (opcional)">
+        <input class="input" type="number" id="editar-hp" placeholder="HP">
+        <input class="input" type="number" id="editar-attack" placeholder="Ataque">
+        <input class="input" type="number" id="editar-defense" placeholder="Defesa">
+        <input class="input" type="number" id="editar-speed" placeholder="Velocidade">
+        <input class="input input-full" type="text" id="editar-abilities" placeholder="Habilidades">
+      </div>
+      <button class="btn btn-warning" onclick="editarPokemon()">
+        <span class="btn-icon">✎</span> Editar
+      </button>
+      <div id="resultado-editar"></div>
+    </section>
+
+    <section class="card" id="section-deletar">
+      <div class="card-label">04</div>
+      <h2 class="card-title">Deletar Pokémon</h2>
+      <div class="form-grid">
+        <input class="input input-full" type="text" id="deletar-id" placeholder="ID do Pokémon (UUID)">
+      </div>
+      <button class="btn btn-danger" onclick="deletarPokemon()">
+        <span class="btn-icon">✕</span> Deletar
+      </button>
+      <div id="resultado-deletar"></div>
+    </section>
+
+    <section class="card" id="section-filtro">
+      <div class="card-label">05</div>
+      <h2 class="card-title">Filtrar por Tipo</h2>
+      <div class="form-grid">
+        <input class="input" type="text" id="filtro-type1" placeholder="Tipo 1">
+        <input class="input" type="text" id="filtro-type2" placeholder="Tipo 2 (opcional)">
+      </div>
+      <button class="btn btn-primary" onclick="filtrarPorTipo()">
+        <span class="btn-icon">◈</span> Filtrar
+      </button>
+      <div id="resultado-filtro-tipo"></div>
+    </section>
+
+    <section class="card" id="section-buscar">
+      <div class="card-label">06</div>
+      <h2 class="card-title">Buscar por Nome</h2>
+      <div class="form-grid">
+        <input class="input input-full" type="text" id="buscar-nome" placeholder="Nome do Pokémon">
+      </div>
+      <button class="btn btn-primary" onclick="buscarPorNome()">
+        <span class="btn-icon">⌕</span> Buscar
+      </button>
+      <div id="resultado-nome"></div>
+    </section>
+
+    <section class="card" id="section-ordenar">
+      <div class="card-label">07</div>
+      <h2 class="card-title">Ordenar por Status</h2>
+      <select class="input select" id="ordenar-campo">
+        <option value="hp">HP ↑</option>
+        <option value="attack">Ataque ↑</option>
+        <option value="defense">Defesa ↑</option>
+        <option value="speed">Velocidade ↑</option>
+        <option value="-hp">HP ↓</option>
+        <option value="-attack">Ataque ↓</option>
+        <option value="-defense">Defesa ↓</option>
+        <option value="-speed">Velocidade ↓</option>
+      </select>
+      <button class="btn btn-primary" onclick="ordenarPorStatus()">
+        <span class="btn-icon">⇅</span> Ordenar
+      </button>
+      <div id="resultado-ordenar"></div>
+    </section>
+
+  </main>
+
+  <script>
+    const BASE_URL = '/api/pokebag/'
+
+    function mostrar(id, data) {
+    }
+
+    async function criarPokemon() {
+      const BASE_URL = '/api/pokebag/';
+      const NAME = document.getElementById('criar-name').value;
+      const SPRITES = document.getElementById('criar-sprites').files[0];
+      const TYPE1 = document.getElementById('criar-type1').value;
+      const TYPE2 = document.getElementById('criar-type2').value;
+      const HP = document.getElementById('criar-hp').value;
+      const ATTACK = document.getElementById('criar-attack').value;
+      const DEFENSE = document.getElementById('criar-defense').value;
+      const SPEED = document.getElementById('criar-speed').value;
+      const ABILITIES = document.getElementById('criar-abilities').value;
+
+      const FORM_DATA = new FormData();
+      FORM_DATA.append('name', NAME);
+      if (SPRITES) {
+        FORM_DATA.append('sprite_img', SPRITES);
+      }
+      FORM_DATA.append('type1', TYPE1);
+      FORM_DATA.append('type2', TYPE2);
+      FORM_DATA.append('hp', HP);
+      FORM_DATA.append('attack', ATTACK);
+      FORM_DATA.append('defense', DEFENSE);
+      FORM_DATA.append('speed', SPEED);
+      FORM_DATA.append('abilities', ABILITIES);
+
+      const CSRF = document.cookie.split('; ').find(row => row.startsWith('csrftoken=')).split('=')[1];
+      const RESPONSE = await fetch(BASE_URL, { method: 'POST', body: FORM_DATA, headers: { 'X-CSRFToken': CSRF } });
+      const DATA = await RESPONSE.json();
+      alert(JSON.stringify(DATA));
+      window.location.href = `/pokemon/${DATA.id}/`;
+    }
+
+    async function editarPokemon() {
+      const ID = document.getElementById('editar-id').value;
+      const NAME = document.getElementById('editar-name').value;
+      const TYPE1 = document.getElementById('editar-type1').value;
+      const TYPE2 = document.getElementById('editar-type2').value;
+      const HP = document.getElementById('editar-hp').value;
+      const ATTACK = document.getElementById('editar-attack').value;
+      const DEFENSE = document.getElementById('editar-defense').value;
+      const SPEED = document.getElementById('editar-speed').value;
+      const ABILITIES = document.getElementById('editar-abilities').value;
+
+      const FORM_DATA = new FormData();
+      FORM_DATA.append('id', ID);
+      FORM_DATA.append('name', NAME);
+      FORM_DATA.append('type1', TYPE1);
+      FORM_DATA.append('type2', TYPE2);
+      FORM_DATA.append('hp', HP);
+      FORM_DATA.append('attack', ATTACK);
+      FORM_DATA.append('defense', DEFENSE);
+      FORM_DATA.append('speed', SPEED);
+      FORM_DATA.append('abilities', ABILITIES);
+
+      const CSRF = document.cookie.split('; ').find(row => row.startsWith('csrftoken=')).split('=')[1];
+      const RESPONSE = await fetch(`${BASE_URL}${ID}/`, { method: 'PATCH', body: FORM_DATA, headers: { 'X-CSRFToken': CSRF } });
+      const DATA = await RESPONSE.json();
+    }
+
+    async function deletarPokemon() {
+      const BASE_URL = '/api/pokebag/';
+      const ID = document.getElementById('deletar-id').value;
+      const CSRF = document.cookie.split('; ').find(row => row.startsWith('csrftoken=')).split('=')[1];
+      const RES = await fetch(`${BASE_URL}${ID}/`, { method: 'DELETE', headers: { 'X-CSRFToken': CSRF } });
+      if (RES.status === 204) {
+        alert('Pokémon deletado com sucesso!');
+      }
+    }
+
+    async function filtrarPorTipo() {
+    }
+
+    async function buscarPorNome() {
+    }
+
+    async function ordenarPorStatus() {
+    }
+  </script>
+
+</body>
+</html>

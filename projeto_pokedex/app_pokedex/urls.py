@@ -10,6 +10,6 @@ router.register(r'pokebag', views.PokemonViewSet)
 urlpatterns = [
     path('', views.home, name='home'),
     path('api/', include(router.urls)),
-    path('pokemon/<uuid:id>/', views.pokemon_details, name='pokemon_details')
-    
+    path('pokemon/<uuid:id>/', views.pokemon_details, name='pokemon_details'),
+    path('poke_list/', views.PokeAPIListView.as_view(), name='poke_list'),    
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

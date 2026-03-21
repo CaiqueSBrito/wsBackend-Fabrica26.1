@@ -1,0 +1,106 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <title>{{ pokemon.name }} — Pokédex</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Outfit:wght@300;400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{% static 'app_pokedex/css/style.css' %}">
+  <link rel="stylesheet" href="{% static 'app_pokedex/css/animations.css' %}">
+</head>
+<body>
+
+  <div class="scanline"></div>
+  <div class="noise"></div>
+
+  <header class="header">
+    <div class="header-details">
+      <a href="/" class="back-btn">← Voltar</a>
+      <h1 class="header-title">{{ pokemon.name }}</h1>
+      <div class="logo-dot"></div>
+    </div>
+  </header>
+
+  <main class="page">
+    <div class="pokemon-layout">
+
+      <div class="portrait-card">
+        <div class="pokemon-img-wrap">
+          {% if pokemon.sprite_img %}
+            <img class="pokemon-img" src="{{ pokemon.sprite_img.url }}" alt="{{ pokemon.name }}">
+          {% else %}
+            <div class="pokemon-no-img">SEM<br>SPRITE</div>
+          {% endif %}
+        </div>
+
+        <h2 class="pokemon-name-big">{{ pokemon.name }}</h2>
+
+        <div class="type-badges">
+          {% with t1=pokemon.type1|lower %}
+            <span class="type-badge type-{{ t1 }}">{{ pokemon.type1 }}</span>
+          {% endwith %}
+          {% if pokemon.type2 %}
+            {% with t2=pokemon.type2|lower %}
+              <span class="type-badge type-{{ t2 }}">{{ pokemon.type2 }}</span>
+            {% endwith %}
+          {% endif %}
+        </div>
+
+        <p class="id-badge">{{ pokemon.id }}</p>
+      </div>
+
+      <div class="stats-panel">
+
+        <div class="info-card">
+          <p class="section-label">BASE STATS</p>
+        
+          <div class="stat-row">
+            <span class="stat-label">HP</span>
+            <span class="stat-value">{{ pokemon.hp }}</span>
+            <div class="stat-bar-wrap">
+            <div class="stat-bar hp" style="width: {{ stats.hp }}%"></div>
+            </div>
+          </div>
+
+          <div class="stat-row">
+            <span class="stat-label">ATAQUE</span>
+            <span class="stat-value">{{ pokemon.attack }}</span>
+            <div class="stat-bar-wrap">
+            <div class="stat-bar attack" style="width: {{ stats.attack }}%"></div>
+            </div>
+          </div>
+
+          <div class="stat-row">
+            <span class="stat-label">DEFESA</span>
+            <span class="stat-value">{{ pokemon.defense }}</span>
+            <div class="stat-bar-wrap">
+            <div class="stat-bar defense" style="width: {{ stats.defense }}%"></div>
+            </div>
+          </div>
+
+          <div class="stat-row">
+            <span class="stat-label">VELOC.</span>
+            <span class="stat-value">{{ pokemon.speed }}</span>
+            <div class="stat-bar-wrap">
+            <div class="stat-bar speed" style="width: {{ stats.speed }}%"></div>
+  </div>
+</div>
+
+        {% if pokemon.abilities %}
+        <div class="info-card">
+          <p class="section-label">HABILIDADES</p>
+          <div class="abilities-list">
+            {% for ability in pokemon.abilities.split %}
+              <span class="ability-tag">{{ ability }}</span>
+            {% endfor %}
+          </div>
+        </div>
+        {% endif %}
+
+      </div>
+    </div>
+  </main>
+
+</body>
+</html>

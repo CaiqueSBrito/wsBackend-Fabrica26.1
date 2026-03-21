@@ -1,0 +1,85 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <title>Pokédex — Todos os Pokémons</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Outfit:wght@300;400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{% static 'app_pokedex/css/style.css' %}">
+  <link rel="stylesheet" href="{% static 'app_pokedex/css/animations.css' %}">
+</head>
+<body>
+
+  <div class="scanline"></div>
+  <div class="noise"></div>
+
+  <header class="header">
+    <div class="header-inner header-details">
+      <a href="/" class="back-btn">◀ Voltar</a>
+      <h1 class="logo-text header-title">TODOS OS POKÉMONS</h1>
+      <div class="logo-dot"></div>
+      <div class="logo-dot"></div>
+    </div>
+  </header>
+
+  <main class="page">
+
+    <div id="loading-state" style="text-align:center; padding: 80px 0;">
+      <span class="loading"></span>
+      <p style="font-family: 'Press Start 2P', monospace; font-size: 9px; color: #555; margin-top: 20px; line-height: 2;">Carregando pokémons...</p>
+    </div>
+
+    <div id="lista-pokemons" class="resultado-grid" style="display:none;"></div>
+
+  </main>
+
+  <script>
+    const CACHE_KEY = 'pokemon_cache';
+
+    async function carregarDaApi() {
+      const response = await fetch('/poke_list/');
+      const data = await response.json();
+      return data;
+    }
+
+    function renderizar(pokemons) {
+      const container = document.getElementById('lista-pokemons');
+      const loading = document.getElementById('loading-state');
+
+      container.innerHTML = '';
+
+      pokemons.forEach(pokemon => {
+        const card = document.createElement('a');
+        card.href = `https://pokeapi.co/api/v2/pokemon/${pokemon.id}/`;
+        card.className = 'pokemon-card';
+        card.innerHTML = `
+          ${pokemon.sprite
+            ? `<img src="${pokemon.sprite}" alt="${pokemon.name}">`
+            : `<div class="pokemon-no-img">?</div>`
+          }
+          <span class="pokemon-name">${pokemon.name}</span>
+          <span class="pokemon-type">#${String(pokemon.id).padStart(4, '0')}</span>
+        `;
+        container.appendChild(card);
+      });
+
+      loading.style.display = 'none';
+      container.style.display = 'grid';
+    }
+
+    async function init() {
+      const CACHE = localStorage.getItem(CACHE_KEY);
+      if (CACHE) {
+        renderizar(JSON.parse(CACHE));
+        return;
+      }
+      const todos = await carregarDaApi();
+      renderizar(todos);
+    }
+
+    init();
+  </script>
+
+</body>
+</html>

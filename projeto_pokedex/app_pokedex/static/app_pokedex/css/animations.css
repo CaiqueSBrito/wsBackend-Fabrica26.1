@@ -1,0 +1,117 @@
+/* ─── SCANLINES ─── */
+.scanline {
+  position: fixed;
+  inset: 0;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 2px,
+    rgba(0,0,0,0.08) 2px,
+    rgba(0,0,0,0.08) 4px
+  );
+  pointer-events: none;
+  z-index: 9999;
+}
+
+/* ─── NOISE ─── */
+.noise {
+  position: fixed;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+  pointer-events: none;
+  z-index: 9998;
+  opacity: 0.3;
+}
+
+/* ─── LOGO DOTS ─── */
+@keyframes pulse-dot {
+  0%, 100% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.3); opacity: 0.7; }
+}
+
+.logo-dot { animation: pulse-dot 2s ease-in-out infinite; }
+.logo-dot:last-child { animation-delay: 1s; }
+
+/* ─── LOGO FLICKER ─── */
+@keyframes flicker {
+  0%, 95%, 100% { opacity: 1; }
+  96% { opacity: 0.8; }
+  97% { opacity: 1; }
+  98% { opacity: 0.6; }
+  99% { opacity: 1; }
+}
+
+.logo-text { animation: flicker 8s ease-in-out infinite; }
+
+/* ─── CARD ENTRANCE ─── */
+@keyframes card-in {
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.card { animation: card-in 0.5s ease both; }
+.card:nth-child(1) { animation-delay: 0.05s; }
+.card:nth-child(2) { animation-delay: 0.10s; }
+.card:nth-child(3) { animation-delay: 0.15s; }
+.card:nth-child(4) { animation-delay: 0.20s; }
+.card:nth-child(5) { animation-delay: 0.25s; }
+.card:nth-child(6) { animation-delay: 0.30s; }
+.card:nth-child(7) { animation-delay: 0.35s; }
+.card:nth-child(8) { animation-delay: 0.40s; }
+
+/* ─── POKEMON FLOAT (home grid) ─── */
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50%       { transform: translateY(-6px); }
+}
+
+.pokemon-card img { animation: float 3s ease-in-out infinite; }
+.pokemon-card:nth-child(2) img { animation-delay: 0.4s; }
+.pokemon-card:nth-child(3) img { animation-delay: 0.8s; }
+.pokemon-card:nth-child(4) img { animation-delay: 1.2s; }
+.pokemon-card:nth-child(5) img { animation-delay: 1.6s; }
+
+/* ─── DETAILS PAGE ENTRANCE ─── */
+@keyframes page-in {
+  from { opacity: 0; transform: translateY(24px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.page { animation: page-in 0.5s ease both; }
+
+/* ─── POKEMON IMG FLOAT (details) ─── */
+@keyframes float-big {
+  0%, 100% { transform: translateY(0); }
+  50%       { transform: translateY(-10px); }
+}
+
+.pokemon-img { animation: float-big 4s ease-in-out infinite; }
+
+/* ─── GLOW PULSE (details) ─── */
+@keyframes glow-pulse {
+  0%, 100% { transform: scale(1);    opacity: 0.6; }
+  50%       { transform: scale(1.15); opacity: 1; }
+}
+
+.pokemon-img-wrap::before { animation: glow-pulse 3s ease-in-out infinite; }
+
+/* ─── STAT BAR FILL ─── */
+@keyframes bar-fill {
+  from { transform: scaleX(0); }
+  to   { transform: scaleX(1); }
+}
+
+.stat-bar {
+  transform-origin: left;
+  animation: bar-fill 1.2s ease both;
+}
+
+.stat-bar.hp      { animation-delay: 0.1s; }
+.stat-bar.attack  { animation-delay: 0.2s; }
+.stat-bar.defense { animation-delay: 0.3s; }
+.stat-bar.speed   { animation-delay: 0.4s; }
+
+/* ─── LOADING SPINNER ─── */
+@keyframes spin { to { transform: rotate(360deg); } }
+
+.loading { animation: spin 0.6s linear infinite; }
