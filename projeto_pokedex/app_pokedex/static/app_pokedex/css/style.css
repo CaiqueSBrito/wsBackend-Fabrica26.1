@@ -598,6 +598,15 @@ input[type="file"]::file-selector-button {
   transition: border-color 0.2s, color 0.2s;
 }
 
+.aviso {
+  font-family: 'Press Start 2P', monospace;
+  font-size: 8px;
+  color: var(--red-light);
+  margin-top: 4px;
+  line-height: 1.8;
+  grid-column: 1 / -1;
+}
+g
 .paginacao {
   display: flex;
   justify-content: center;

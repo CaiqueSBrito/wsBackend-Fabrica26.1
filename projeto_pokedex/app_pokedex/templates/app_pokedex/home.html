@@ -48,14 +48,23 @@
       <h2 class="card-title">Criar Pokémon</h2>
       <div class="form-grid">
         <input class="input" type="text" id="criar-name" placeholder="Nome">
+        <span id="aviso-criar-name" class="aviso" style="display:none;"></span>
         <input class="input" type="file" id="criar-sprites">
+        <span id="aviso-criar-sprites" class="aviso" style="display:none;"></span>
         <input class="input" type="text" id="criar-type1" placeholder="Tipo 1">
+        <span id="aviso-criar-type1" class="aviso" style="display:none;"></span>
         <input class="input" type="text" id="criar-type2" placeholder="Tipo 2 (opcional)">
+        <span id="aviso-criar-type2" class="aviso" style="display:none;"></span>
         <input class="input" type="number" id="criar-hp" placeholder="HP">
+        <span id="aviso-criar-hp" class="aviso" style="display:none;"></span>
         <input class="input" type="number" id="criar-attack" placeholder="Ataque">
+        <span id="aviso-criar-attack" class="aviso" style="display:none;"></span>
         <input class="input" type="number" id="criar-defense" placeholder="Defesa">
+        <span id="aviso-criar-defense" class="aviso" style="display:none;"></span>
         <input class="input" type="number" id="criar-speed" placeholder="Velocidade">
+        <span id="aviso-criar-speed" class="aviso" style="display:none;"></span>
         <input class="input input-full" type="text" id="criar-abilities" placeholder="Habilidades">
+        <span id="aviso-criar-abilities" class="aviso" style="display:none;"></span>
       </div>
       <button class="btn btn-accent" onclick="criarPokemon()">
         <span class="btn-icon">✦</span> Criar
@@ -76,14 +85,23 @@
       <h2 class="card-title">Editar Pokémon</h2>
       <div class="form-grid">
         <input class="input input-full" type="text" id="editar-id" placeholder="ID do Pokémon (UUID)">
+        <span id="aviso-editar-id" class="aviso" style="display:none;"></span>
         <input class="input" type="text" id="editar-name" placeholder="Nome">
+        <span id="aviso-editar-name" class="aviso" style="display:none;"></span>
         <input class="input" type="text" id="editar-type1" placeholder="Tipo 1">
+        <span id="aviso-editar-type1" class="aviso" style="display:none;"></span>
         <input class="input" type="text" id="editar-type2" placeholder="Tipo 2 (opcional)">
+        <span id="aviso-editar-type2" class="aviso" style="display:none;"></span>
         <input class="input" type="number" id="editar-hp" placeholder="HP">
+        <span id="aviso-editar-hp" class="aviso" style="display:none;"></span>
         <input class="input" type="number" id="editar-attack" placeholder="Ataque">
+        <span id="aviso-editar-attack" class="aviso" style="display:none;"></span>
         <input class="input" type="number" id="editar-defense" placeholder="Defesa">
+        <span id="aviso-editar-defense" class="aviso" style="display:none;"></span>
         <input class="input" type="number" id="editar-speed" placeholder="Velocidade">
+        <span id="aviso-editar-speed" class="aviso" style="display:none;"></span>       
         <input class="input input-full" type="text" id="editar-abilities" placeholder="Habilidades">
+        <span id="aviso-editar-abilities" class="aviso" style="display:none;"></span>
       </div>
       <button class="btn btn-warning" onclick="editarPokemon()">
         <span class="btn-icon">✎</span> Editar
@@ -110,8 +128,36 @@
     function mostrar(id, data) {
     }
 
+    function validar(campos) {
+      let valido = true;
+      campos.forEach(({ id, msg }) => {
+      const el = document.getElementById(id);
+      const aviso = document.getElementById(`aviso-${id}`);
+        if (!el.value.trim()) {
+          aviso.textContent = msg || 'Campo obrigatório';
+          aviso.style.display = 'block';
+          valido = false;
+        } else {
+          aviso.textContent = '';
+          aviso.style.display = 'none';
+        }
+    });
+    return valido;
+  }
+
     async function criarPokemon() {
-    
+      
+      const ok = validar([
+          { id: 'criar-name', msg: 'Nome é obrigatório' },
+          { id: 'criar-type1', msg: 'Tipo 1 é obrigatório' },
+          { id: 'criar-hp', msg: 'HP é obrigatório' },
+          { id: 'criar-attack', msg: 'Ataque é obrigatório' },
+          { id: 'criar-defense', msg: 'Defesa é obrigatória' },
+          { id: 'criar-speed', msg: 'Velocidade é obrigatória' },
+          { id: 'criar-abilities', msg: 'Habilidades são obrigatórias' },
+        ]);
+        if (!ok) return
+
       const BASE_URL = '/api/pokebag/';
       const NAME = document.getElementById('criar-name').value;
       const SPRITES = document.getElementById('criar-sprites').files[0];
@@ -143,6 +189,23 @@
     }
 
     async function editarPokemon() {
+
+      function validar(campos) {
+        let valido = true;
+        campos.forEach(({ id, msg }) => {
+        const el = document.getElementById(id);
+        const aviso = document.getElementById(`aviso-${id}`);
+          if (!el.value.trim()) {
+            aviso.textContent = msg || 'Campo obrigatório';
+            aviso.style.display = 'block';
+            valido = false;
+          } else {
+            aviso.textContent = '';
+            aviso.style.display = 'none';
+          }
+      });
+      return valido;
+    }
 
       const ID = document.getElementById('editar-id').value;
       const NAME = document.getElementById('editar-name').value;
