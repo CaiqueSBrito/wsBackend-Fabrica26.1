@@ -1,15 +1,15 @@
 OBRIGATORIOS
 [x] .gitignore
-[] requirements
+[x] requirements
 [x] readme.md
-[ ] dockerfile
+[x] dockerfile
 [ ] adicionar endpoints no readme.md
 
 PRIORIDADE
 
-[ ] docker compose
+[x] docker compose
 [ ] usar django template para um frontend bom
-[ ] usar postgresql
+[x] usar postgresql
 [ ] usar jinja
 [ ] token de autenticação
 
