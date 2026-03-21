@@ -15,11 +15,20 @@
   <div class="noise"></div>
 
   <header class="header">
-    <div class="header-inner">
-      <div class="logo-dot"></div>
-      <h1 class="logo-text">POKÉDEX</h1>
-      <div class="logo-dot"></div>
-    </div>
+      <div class="header-inner">
+        <div class="logo-dot"></div>
+        <h1 class="logo-text">POKÉDEX</h1>
+        <div class="logo-dot"></div>
+        <div class="header-auth">
+          {% if request.user.is_authenticated %}
+            <span class="auth-user">{{ request.user.username }}</span>
+            <a href="{% url 'logout' %}" class="btn btn-danger">Sair</a>
+          {% else %}
+            <a href="{% url 'login' %}" class="btn btn-primary">Entrar</a>
+            <a href="{% url 'registro' %}" class="btn btn-accent">Cadastrar</a>
+          {% endif %}
+        </div>
+      </div>
   </header>
 
   <main class="container">
@@ -57,18 +66,8 @@
     <section class="card" id="section-meus" style="grid-column: 1 / -1;">
       <div class="card-label">★</div>
       <h2 class="card-title">Meus Pokémons</h2>
-      <div class="resultado-grid">
-        {% for pokemon in pokemons %}
-          <a href="{% url 'pokemon_details' id=pokemon.id %}" class="pokemon-card">
-            {% if pokemon.sprite_img %}
-              <img src="{{ pokemon.sprite_img.url }}" alt="{{ pokemon.name }}">
-            {% endif %}
-            <span class="pokemon-name">{{ pokemon.name }}</span>
-            <span class="pokemon-type">{{ pokemon.type1 }}{% if pokemon.type2 %} / {{ pokemon.type2 }}{% endif %}</span>
-          </a>
-        {% empty %}
-          <p class="empty-msg">Nenhum pokémon cadastrado ainda.</p>
-        {% endfor %}
+      <div class="resultado-grid" id="meus-pokemons">
+        <p class="empty-msg">Carregando...</p>
       </div>
     </section>
 
@@ -103,51 +102,6 @@
       </button>
       <div id="resultado-deletar"></div>
     </section>
-
-    <section class="card" id="section-filtro">
-      <div class="card-label">05</div>
-      <h2 class="card-title">Filtrar por Tipo</h2>
-      <div class="form-grid">
-        <input class="input" type="text" id="filtro-type1" placeholder="Tipo 1">
-        <input class="input" type="text" id="filtro-type2" placeholder="Tipo 2 (opcional)">
-      </div>
-      <button class="btn btn-primary" onclick="filtrarPorTipo()">
-        <span class="btn-icon">◈</span> Filtrar
-      </button>
-      <div id="resultado-filtro-tipo"></div>
-    </section>
-
-    <section class="card" id="section-buscar">
-      <div class="card-label">06</div>
-      <h2 class="card-title">Buscar por Nome</h2>
-      <div class="form-grid">
-        <input class="input input-full" type="text" id="buscar-nome" placeholder="Nome do Pokémon">
-      </div>
-      <button class="btn btn-primary" onclick="buscarPorNome()">
-        <span class="btn-icon">⌕</span> Buscar
-      </button>
-      <div id="resultado-nome"></div>
-    </section>
-
-    <section class="card" id="section-ordenar">
-      <div class="card-label">07</div>
-      <h2 class="card-title">Ordenar por Status</h2>
-      <select class="input select" id="ordenar-campo">
-        <option value="hp">HP ↑</option>
-        <option value="attack">Ataque ↑</option>
-        <option value="defense">Defesa ↑</option>
-        <option value="speed">Velocidade ↑</option>
-        <option value="-hp">HP ↓</option>
-        <option value="-attack">Ataque ↓</option>
-        <option value="-defense">Defesa ↓</option>
-        <option value="-speed">Velocidade ↓</option>
-      </select>
-      <button class="btn btn-primary" onclick="ordenarPorStatus()">
-        <span class="btn-icon">⇅</span> Ordenar
-      </button>
-      <div id="resultado-ordenar"></div>
-    </section>
-
   </main>
 
   <script>
@@ -184,7 +138,6 @@
       const CSRF = document.cookie.split('; ').find(row => row.startsWith('csrftoken=')).split('=')[1];
       const RESPONSE = await fetch(BASE_URL, { method: 'POST', body: FORM_DATA, headers: { 'X-CSRFToken': CSRF } });
       const DATA = await RESPONSE.json();
-      alert(JSON.stringify(DATA));
       window.location.href = `/pokemon/${DATA.id}/`;
     }
 
@@ -224,6 +177,31 @@
         alert('Pokémon deletado com sucesso!');
       }
     }
+
+    // ─── MEUS POKÉMONS ───
+    async function carregarMeusPokemons() {
+      const container = document.getElementById('meus-pokemons');
+      const res = await fetch(BASE_URL);
+      if (!res.ok) {
+        container.innerHTML = '<p class="empty-msg">Faça login para ver seus pokémons.</p>';
+        return;
+      }
+      const data = await res.json();
+      const pokemons = data.results || data;
+      if (!pokemons.length) {
+        container.innerHTML = '<p class="empty-msg">Nenhum pokémon cadastrado ainda.</p>';
+        return;
+      }
+      container.innerHTML = pokemons.map(p => `
+        <a href="/pokemon/${p.id}/" class="pokemon-card">
+          ${p.sprite_img ? `<img src="${p.sprite_img}" alt="${p.name}">` : ''}
+          <span class="pokemon-name">${p.name}</span>
+          <span class="pokemon-type">${p.type1}${p.type2 ? ' / ' + p.type2 : ''}</span>
+        </a>
+      `).join('');
+    }
+
+    carregarMeusPokemons();
   </script>
 
 </body>

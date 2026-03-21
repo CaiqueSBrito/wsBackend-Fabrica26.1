@@ -14,13 +14,14 @@
   <div class="scanline"></div>
   <div class="noise"></div>
 
-  <header class="header">
-    <div class="header-inner">
-      <div class="logo-dot"></div>
-      <h1 class="logo-text">POKÉDEX</h1>
-      <div class="logo-dot"></div>
-    </div>
-  </header>
+    <header class="header">
+      <div class="header-inner">
+        <div class="logo-dot"></div>
+        <h1 class="logo-text">POKÉDEX</h1>
+        <div class="logo-dot"></div>
+        <a href="/" class="back-btn">← Home</a>
+      </div>
+    </header>
 
   <main class="auth-page">
     <div class="auth-card">
@@ -80,7 +81,7 @@
 
       const data = await res.json();
 
-    if (res.ok || res.redirected) {
+      if (res.ok || res.redirected) {
         window.location.href = '/';
     } else {
         const data = await res.json();
