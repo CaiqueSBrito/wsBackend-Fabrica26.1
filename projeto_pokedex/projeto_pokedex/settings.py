@@ -78,6 +78,8 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
+CSRF_TRUSTED_ORIGINS = ['https://wsbackend-fabrica26-1.onrender.com']
+
 ROOT_URLCONF = 'projeto_pokedex.urls'
 
 TEMPLATES = [
