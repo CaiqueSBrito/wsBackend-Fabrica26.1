@@ -107,23 +107,6 @@
   <script>
     const BASE_URL = '/api/pokebag/'
 
-    function validar(campos) {
-      let valido = true;
-      campos.forEach(({ id, msg }) => {
-        const el = document.getElementById(id);
-        const aviso = document.getElementById(`aviso-${id}`);
-        if (!el.value.trim()) {
-          aviso.textContent = msg || 'Campo obrigatório';
-          aviso.style.display = 'block';
-          valido = false;
-        } else {
-          aviso.textContent = '';
-          aviso.style.display = 'none';
-        }
-      });
-      return valido;
-    }
-
     function mostrar(id, data) {
     }
 
