@@ -17,14 +17,6 @@
 
   <hr>
 
-  <!-- BUSCAR POR ID -->
-  <section>
-    <h2>Buscar por ID</h2>
-    <input type="number" id="buscar-id" placeholder="ID do Pokémon">
-    <button onclick="buscarPorId()">Buscar</button>
-    <div id="resultado-id"></div>
-  </section>
-
   <hr>
 
   <!-- CRIAR -->
@@ -118,33 +110,80 @@
     }
 
     // Listar todos
-    function listarTodos() {
-    }
+    async function listarTodos() {
 
-    // Buscar por ID
-    function buscarPorId() {
+      const CACHE_KEY = 'pokemon_cache';
+      const CACHE = localStorage.getItem(CACHE_KEY);
+
+      if (CACHE){
+        return JSON.parse(CACHE);
+      }
+
+      const TODOS = [];
+      const BASE_URL = ('https://pokeapi.co/api/v2/pokemon?limit=2000'); //url de onde vou puxar os dados
+      const RESPONSE = await fetch(BASE_URL, { method: 'GET' }); //fiz a request para Pokeapi
+      const DATA = await RESPONSE.json(); //transformei a request em JSON
+      const LOTE_SIZE = 20;
+
+      // dividi em lotes para não sobrecarregar a API e o navegador
+      for (let i = 0; i < DATA.results.length; i += LOTE_SIZE) {
+        const LOTE = DATA.results.slice(i, i + LOTE_SIZE);
+        const DETALHES = await Promise.all(LOTE.map(pokemon => fetch(pokemon.url).then(r => r.json()).then(DETALHE => ({ name: DETALHE.name, sprites: DETALHE.sprites.front_default, url: pokemon.url }))));
+        TODOS.push (...DETALHES);
+      }
+
+      localStorage.setItem(CACHE_KEY, JSON.stringify(TODOS));
+      return TODOS;
+    //detalhes.forEach(pokemon => );
     }
 
     // Criar Pokémon
-    function criarPokemon() {
-    }
+    async function criarPokemon() {
+      const BASE_URL = '/api/pokemon/';
+
+      const NAME = document.getElementById('criar-name').value;
+      const SPRITES = document.getElementById('criar-sprites').files[0];
+      const TYPE1 = document.getElementById('criar-type1').value;
+      const TYPE2 = document.getElementById('criar-type2').value;
+      const HP = document.getElementById('criar-hp').value;
+      const ATTACK = document.getElementById('criar-attack').value;
+      const DEFENSE = document.getElementById('criar-defense').value;
+      const SPEED = document.getElementById('criar-speed').value;
+      const ABILITIES = document.getElementById('criar-abilities').value;
+
+      const FORM_DATA = new FormData();
+      FORM_DATA.append('name', NAME);
+      FORM_DATA.append('sprites', SPRITES);
+      FORM_DATA.append('type1', TYPE1);
+      FORM_DATA.append('type2', TYPE2);
+      FORM_DATA.append('hp', HP);
+      FORM_DATA.append('attack', ATTACK);
+      FORM_DATA.append('defense', DEFENSE);
+      FORM_DATA.append('speed', SPEED);
+      FORM_DATA.append('abilities', ABILITIES);
+
+      const RESPONSE = await fetch(BASE_URL, { method: 'POST', body: FORM_DATA });
+      const DATA = await RESPONSE.json();
+
+      
+}   
 
     // Editar Pokémon
-    function editarPokemon() {
+    async function editarPokemon() {
     }
 
     // Deletar Pokémon
-    function deletarPokemon() {
+    async function deletarPokemon() {
     }
 
     // Filtrar por tipo
-    function filtrarPorTipo() {
+    async function filtrarPorTipo() {
     }
 
-    function buscarPorNome() {
+    async function buscarPorNome() {
    }
 
-    function ordenarPorStatus() {
+    async function ordenarPorStatus() {
     }
   </script>
 
