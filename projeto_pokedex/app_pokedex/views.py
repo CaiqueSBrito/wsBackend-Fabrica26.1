@@ -68,18 +68,18 @@ def sair(request):
 def poke_detail(request, pokemon_id):
     data = requests.get(f'https://pokeapi.co/api/v2/pokemon/{pokemon_id}/').json()
     pokemon = {
-        'name':     data['name'],
+        'name':      data['name'],
         'sprite_img': data['sprites']['front_default'],
-        'type1':    data['types'][0]['type']['name'],
-        'type2':    data['types'][1]['type']['name'] if len(data['types']) > 1 else '',
-        'hp':       next(s['base_stat'] for s in data['stats'] if s['stat']['name'] == 'hp'),
-        'attack':   next(s['base_stat'] for s in data['stats'] if s['stat']['name'] == 'attack'),
-        'defense':  next(s['base_stat'] for s in data['stats'] if s['stat']['name'] == 'defense'),
-        'speed':    next(s['base_stat'] for s in data['stats'] if s['stat']['name'] == 'speed'),
+        'type1':     data['types'][0]['type']['name'],
+        'type2':     data['types'][1]['type']['name'] if len(data['types']) > 1 else '',
+        'hp':        next(s['base_stat'] for s in data['stats'] if s['stat']['name'] == 'hp'),
+        'attack':    next(s['base_stat'] for s in data['stats'] if s['stat']['name'] == 'attack'),
+        'defense':   next(s['base_stat'] for s in data['stats'] if s['stat']['name'] == 'defense'),
+        'speed':     next(s['base_stat'] for s in data['stats'] if s['stat']['name'] == 'speed'),
         'abilities': ' '.join([a['ability']['name'] for a in data['abilities']]),
-        'id':       data['id'],
+        'id':        data['id'],
     }
-    return render(request, 'app_pokedex/pokemon_details.html', {'pokemon': pokemon})
+    return render(request, 'app_pokedex/poke_detail.html', {'pokemon': pokemon})
 
 def pokemon_details(request, id):
     pokemon = Pokemon.objects.get(id=id)
@@ -156,4 +156,6 @@ class PokemonViewSet(viewsets.ModelViewSet):
         serializer.save(usuario=self.request.user)
 
     def get_queryset(self):
-        return Pokemon.objects.filter(usuario=self.request.user)
+        if self.request.user.is_authenticated:
+            return Pokemon.objects.filter(usuario=self.request.user)
+        return Pokemon.objects.none()
