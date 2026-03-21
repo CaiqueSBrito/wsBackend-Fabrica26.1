@@ -5,10 +5,11 @@ from rest_framework import routers
 from django.conf.urls.static import static
 
 router = routers.DefaultRouter()
-router.register(r'pokemon', views.PokemonViewSet)
+router.register(r'pokebag', views.PokemonViewSet)
 
 urlpatterns = [
     path('', views.home, name='home'),
     path('api/', include(router.urls)),
+    path('pokemon/<uuid:id>/', views.pokemon_details, name='pokemon_details')
     
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

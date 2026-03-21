@@ -40,7 +40,7 @@
   <!-- EDITAR -->
   <section>
     <h2>Editar Pokémon</h2>
-    <input type="number" id="editar-id" placeholder="ID do Pokémon">
+    <input type="text" id="editar-id" placeholder="ID do Pokémon">
     <input type="text" id="editar-name" placeholder="Nome">
     <input type="text" id="editar-type1" placeholder="Tipo 1">
     <input type="text" id="editar-type2" placeholder="Tipo 2 (opcional)">
@@ -58,7 +58,7 @@
   <!-- DELETAR -->
   <section>
     <h2>Deletar Pokémon</h2>
-    <input type="number" id="deletar-id" placeholder="ID do Pokémon">
+    <input type="uuid4" id="deletar-id" placeholder="ID do Pokémon">
     <button onclick="deletarPokemon()">Deletar</button>
     <div id="resultado-deletar"></div>
   </section>
@@ -104,7 +104,7 @@
   </section>
 
   <script>
-    const BASE_URL = '/api/pokemon/'
+    const BASE_URL = '/api/pokebag/'
 
     function mostrar(id, data) {
     }
@@ -124,7 +124,7 @@
       const RESPONSE = await fetch(BASE_URL, { method: 'GET' }); //fiz a request para Pokeapi
       const DATA = await RESPONSE.json(); //transformei a request em JSON
       const LOTE_SIZE = 20;
-
+      
       // dividi em lotes para não sobrecarregar a API e o navegador
       for (let i = 0; i < DATA.results.length; i += LOTE_SIZE) {
         const LOTE = DATA.results.slice(i, i + LOTE_SIZE);
@@ -134,13 +134,13 @@
 
       localStorage.setItem(CACHE_KEY, JSON.stringify(TODOS));
       return TODOS;
-    //detalhes.forEach(pokemon => );
     }
 
     // Criar Pokémon
     async function criarPokemon() {
-      const BASE_URL = '/api/pokemon/';
+      const BASE_URL = '/api/pokebag/';
 
+      // recebendo os dados do formulário
       const NAME = document.getElementById('criar-name').value;
       const SPRITES = document.getElementById('criar-sprites').files[0];
       const TYPE1 = document.getElementById('criar-type1').value;
@@ -151,9 +151,10 @@
       const SPEED = document.getElementById('criar-speed').value;
       const ABILITIES = document.getElementById('criar-abilities').value;
 
+      // criando o FormData para enviar os dados, incluindo o arquivo de imagem
       const FORM_DATA = new FormData();
       FORM_DATA.append('name', NAME);
-      FORM_DATA.append('sprites', SPRITES);
+      FORM_DATA.append('sprite_img', SPRITES);
       FORM_DATA.append('type1', TYPE1);
       FORM_DATA.append('type2', TYPE2);
       FORM_DATA.append('hp', HP);
@@ -162,18 +163,52 @@
       FORM_DATA.append('speed', SPEED);
       FORM_DATA.append('abilities', ABILITIES);
 
-      const RESPONSE = await fetch(BASE_URL, { method: 'POST', body: FORM_DATA });
+      // obtendo o token CSRF do cookie para incluir no cabeçalho da requisição
+      const CSRF = document.cookie.split('; ').find(row => row.startsWith('csrftoken=')).split('=')[1];
+      const RESPONSE = await fetch(BASE_URL, { method: 'POST', body: FORM_DATA, headers: { 'X-CSRFToken': CSRF } });  
       const DATA = await RESPONSE.json();
-
-      
-}   
+      alert(JSON.stringify(DATA));
+      window.location.href = `/pokemon/${DATA.id}/`;
+    }   
 
     // Editar Pokémon
     async function editarPokemon() {
+      const ID = document.getElementById('editar-id').value;
+      const NAME = document.getElementById('editar-name').value;
+      const TYPE1 = document.getElementById('editar-type1').value;
+      const TYPE2 = document.getElementById('editar-type2').value;
+      const HP = document.getElementById('editar-hp').value;  
+      const ATTACK = document.getElementById('editar-attack').value;
+      const DEFENSE = document.getElementById('editar-defense').value;
+      const SPEED = document.getElementById('editar-speed').value;
+      const ABILITIES = document.getElementById('editar-abilities').value;
+
+      const FORM_DATA = new FormData();
+      FORM_DATA.append('id', ID);
+      FORM_DATA.append('name', NAME);
+      FORM_DATA.append('type1', TYPE1);
+      FORM_DATA.append('type2', TYPE2);
+      FORM_DATA.append('hp', HP);
+      FORM_DATA.append('attack', ATTACK);
+      FORM_DATA.append('defense', DEFENSE);
+      FORM_DATA.append('speed', SPEED);
+      FORM_DATA.append('abilities', ABILITIES);
+
+      const CSRF = document.cookie.split('; ').find(row => row.startsWith('csrftoken=')).split('=')[1];
+
+      const RESPONSE = await fetch(`${BASE_URL}${ID}/`, { method: 'PATCH', body: FORM_DATA, headers: { 'X-CSRFToken': CSRF } });
+      const DATA = await RESPONSE.json();
     }
 
     // Deletar Pokémon
     async function deletarPokemon() {
+      const BASE_URL = '/api/pokebag/';
+      
+      const ID = document.getElementById('deletar-id').value;
+
+      const CSRF = document.cookie.split('; ').find(row => row.startsWith('csrftoken=')).split('=')[1];
+
+      const RESPONSE = await fetch(`${BASE_URL}${ID}/`, { method: 'DELETE', body: ID, headers: { 'X-CSRFToken': CSRF } });
     }
 
     // Filtrar por tipo
