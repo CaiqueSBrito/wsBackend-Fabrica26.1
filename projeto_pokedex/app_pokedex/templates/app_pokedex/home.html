@@ -137,7 +137,7 @@
 
       const CSRF = document.cookie.split('; ').find(row => row.startsWith('csrftoken=')).split('=')[1];
       const RESPONSE = await fetch(BASE_URL, { method: 'POST', body: FORM_DATA, headers: { 'X-CSRFToken': CSRF } });
-      const DATA = await RESPONSE.json();
+      const DATA = await RESPONSE.json(); 
       window.location.href = `/pokemon/${DATA.id}/`;
     }
 
@@ -165,6 +165,9 @@
 
       const CSRF = document.cookie.split('; ').find(row => row.startsWith('csrftoken=')).split('=')[1];
       const RESPONSE = await fetch(`${BASE_URL}${ID}/`, { method: 'PATCH', body: FORM_DATA, headers: { 'X-CSRFToken': CSRF } });
+      if (RESPONSE.status === 204) {
+        alert('Pokémon atualizado com sucesso!');
+      }
       const DATA = await RESPONSE.json();
     }
 
@@ -172,8 +175,8 @@
       const BASE_URL = '/api/pokebag/';
       const ID = document.getElementById('deletar-id').value;
       const CSRF = document.cookie.split('; ').find(row => row.startsWith('csrftoken=')).split('=')[1];
-      const RES = await fetch(`${BASE_URL}${ID}/`, { method: 'DELETE', headers: { 'X-CSRFToken': CSRF } });
-      if (RES.status === 204) {
+      const RESPONSE = await fetch(`${BASE_URL}${ID}/`, { method: 'DELETE', headers: { 'X-CSRFToken': CSRF } });
+      if (RESPONSE.status === 204) {
         alert('Pokémon deletado com sucesso!');
       }
     }
