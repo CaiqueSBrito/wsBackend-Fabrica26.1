@@ -80,6 +80,11 @@ MIDDLEWARE = [
 
 CSRF_TRUSTED_ORIGINS = ['https://wsbackend-fabrica26-1.onrender.com']
 
+CSRF_COOKIE_SAMESITE = 'None'
+CSRF_COOKIE_SECURE = True
+SESSION_COOKIE_SECURE = True
+SESSION_COOKIE_SAMESITE = 'None'
+
 ROOT_URLCONF = 'projeto_pokedex.urls'
 
 TEMPLATES = [
