@@ -1,0 +1,22 @@
+OBRIGATORIOS
+[x] .gitignore
+[] requirements
+[x] readme.md
+[ ] dockerfile
+[ ] adicionar endpoints no readme.md
+
+PRIORIDADE
+
+[ ] docker compose
+[ ] usar django template para um frontend bom
+[ ] usar postgresql
+[ ] usar jinja
+[ ] token de autenticação
+
+ENDPOINTS
+
+[] POST   /pokebag/              → capturar/adicionar um Pokémon
+[] GET    /pokebag/              → listar todos os Pokémon da bag
+[] GET    /pokebag/{id}/         → ver detalhes de um Pokémon
+[] PUT    /pokebag/{id}/         → upar / editar o Pokémon
+[] DELETE /pokebag/{id}/         → soltar / deletar o Pokémon

@@ -1,19 +1,152 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Meu Projeto Django</title>
+  <meta charset="UTF-8">
+  <title>Pokédex</title>
 </head>
 <body>
 
-    <h1>Gestão de Usuários - Alcance 360</h1>
-    <p>Bem-vindo ao sistema. Use o formulário abaixo:</p>
+  <h1>Pokédex</h1>
 
-    <form>
-        <input type="text" placeholder="Nome">
-        <button type="submit">Enviar</button>
-    </form>
+  <!-- LISTAR TODOS -->
+  <section>
+    <h2>Listar todos os Pokémons</h2>
+    <button onclick="listarTodos()">Buscar todos</button>
+    <div id="resultado-todos"></div>
+  </section>
+
+  <hr>
+
+  <!-- BUSCAR POR ID -->
+  <section>
+    <h2>Buscar por ID</h2>
+    <input type="number" id="buscar-id" placeholder="ID do Pokémon">
+    <button onclick="buscarPorId()">Buscar</button>
+    <div id="resultado-id"></div>
+  </section>
+
+  <hr>
+
+  <!-- CRIAR -->
+  <section>
+    <h2>Criar Pokémon</h2>
+    <input type="text" id="criar-name" placeholder="Nome">
+    <input type="file" id="criar-sprites">
+    <input type="text" id="criar-type1" placeholder="Tipo 1">
+    <input type="text" id="criar-type2" placeholder="Tipo 2 (opcional)">
+    <input type="number" id="criar-hp" placeholder="HP">
+    <input type="number" id="criar-attack" placeholder="Ataque">
+    <input type="number" id="criar-defense" placeholder="Defesa">
+    <input type="number" id="criar-speed" placeholder="Velocidade">
+    <input type="text" id="criar-abilities" placeholder="Habilidades">
+    <button onclick="criarPokemon()">Criar</button>
+    <div id="resultado-criar"></div>
+  </section>
+
+  <hr>
+
+  <!-- EDITAR -->
+  <section>
+    <h2>Editar Pokémon</h2>
+    <input type="number" id="editar-id" placeholder="ID do Pokémon">
+    <input type="text" id="editar-name" placeholder="Nome">
+    <input type="text" id="editar-type1" placeholder="Tipo 1">
+    <input type="text" id="editar-type2" placeholder="Tipo 2 (opcional)">
+    <input type="number" id="editar-hp" placeholder="HP">
+    <input type="number" id="editar-attack" placeholder="Ataque">
+    <input type="number" id="editar-defense" placeholder="Defesa">
+    <input type="number" id="editar-speed" placeholder="Velocidade">
+    <input type="text" id="editar-abilities" placeholder="Habilidades">
+    <button onclick="editarPokemon()">Editar</button>
+    <div id="resultado-editar"></div>
+  </section>
+
+  <hr>
+
+  <!-- DELETAR -->
+  <section>
+    <h2>Deletar Pokémon</h2>
+    <input type="number" id="deletar-id" placeholder="ID do Pokémon">
+    <button onclick="deletarPokemon()">Deletar</button>
+    <div id="resultado-deletar"></div>
+  </section>
+
+  <hr>
+
+  <!-- FILTRAR POR TIPO -->
+  <section>
+    <h2>Filtrar por Tipo</h2>
+    <input type="text" id="filtro-type1" placeholder="Tipo 1">
+    <input type="text" id="filtro-type2" placeholder="Tipo 2 (opcional)">
+    <button onclick="filtrarPorTipo()">Filtrar</button>
+    <div id="resultado-filtro-tipo"></div>
+  </section>
+
+  <hr>
+
+  <!-- BUSCAR POR NOME -->
+  <section>
+    <h2>Buscar por Nome</h2>
+    <input type="text" id="buscar-nome" placeholder="Nome do Pokémon">
+    <button onclick="buscarPorNome()">Buscar</button>
+    <div id="resultado-nome"></div>
+  </section>
+
+  <hr>
+
+  <!-- ORDENAR POR STATUS -->
+  <section>
+    <h2>Ordenar por Status</h2>
+    <select id="ordenar-campo">
+      <option value="hp">HP</option>
+      <option value="attack">Ataque</option>
+      <option value="defense">Defesa</option>
+      <option value="speed">Velocidade</option>
+      <option value="-hp">HP (decrescente)</option>
+      <option value="-attack">Ataque (decrescente)</option>
+      <option value="-defense">Defesa (decrescente)</option>
+      <option value="-speed">Velocidade (decrescente)</option>
+    </select>
+    <button onclick="ordenarPorStatus()">Ordenar</button>
+    <div id="resultado-ordenar"></div>
+  </section>
+
+  <script>
+    const BASE_URL = '/api/pokemon/'
+
+    function mostrar(id, data) {
+    }
+
+    // Listar todos
+    function listarTodos() {
+    }
+
+    // Buscar por ID
+    function buscarPorId() {
+    }
+
+    // Criar Pokémon
+    function criarPokemon() {
+    }
+
+    // Editar Pokémon
+    function editarPokemon() {
+    }
+
+    // Deletar Pokémon
+    function deletarPokemon() {
+    }
+
+    // Filtrar por tipo
+    function filtrarPorTipo() {
+    }
+
+    function buscarPorNome() {
+   }
+
+    function ordenarPorStatus() {
+    }
+  </script>
 
 </body>
 </html>

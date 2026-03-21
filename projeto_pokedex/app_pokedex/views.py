@@ -11,3 +11,7 @@ def home(request):
 class PokemonViewSet(viewsets.ModelViewSet):
     queryset = Pokemon.objects.all()
     serializer_class = PokemonSerializer
+    filterset_fields = ['type1', 'type2']
+    search_fields = ['name']
+    ordering_fields = ['hp', 'attack', 'defense', 'speed']
+    
