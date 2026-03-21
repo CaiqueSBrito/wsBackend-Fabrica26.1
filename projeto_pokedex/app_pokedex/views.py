@@ -23,6 +23,7 @@ from django.shortcuts import redirect
 
 import json
 
+@ensure_csrf_cookie
 def registro(request):
     if request.method == 'POST':
         body = json.loads(request.body)
@@ -39,6 +40,7 @@ def registro(request):
 
     return render(request, 'app_pokedex/registro.html')
 
+@ensure_csrf_cookie
 def entrar(request):
     if request.method == 'POST':
         body = json.loads(request.body)
