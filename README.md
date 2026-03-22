@@ -57,6 +57,11 @@ Crie um arquivo `.env` na raiz do projeto (`projeto_pokedex/`):
 SECRET_KEY=sua-secret-key-aqui
 DEBUG=True
 DATABASE_URL=postgresql://postgres.SEU_PROJECT_REF:SUA_SENHA@aws-0-us-east-1.pooler.supabase.com:5432/postgres
+DB_NAME=postgres
+DB_HOST=aws-0-us-east-1.pooler.supabase.com
+DB_PASS=SUA_SENHA
+DB_PORT=5432
+DB_USER=postgres.SEU_PROJECT_REF
 ```
 
 ### 5. Rodar as migrations
@@ -193,4 +198,9 @@ projeto_pokedex/
 |----------|-----------|
 | `SECRET_KEY` | Chave secreta do Django |
 | `DEBUG` | Modo debug (`True` ou `False`) |
-| `DATABASE_URL` | URL de conexão com o PostgreSQL |
+| `DATABASE_URL` | URL de conexão completa com o PostgreSQL |
+| `DB_NAME` | Nome do banco de dados |
+| `DB_HOST` | Host do banco de dados (Supabase) |
+| `DB_PASS` | Senha do banco de dados |
+| `DB_PORT` | Porta do banco de dados |
+| `DB_USER` | Usuário do banco de dados |
