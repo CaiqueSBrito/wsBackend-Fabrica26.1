@@ -18,3 +18,4 @@ COPY projeto_pokedex/ .
 EXPOSE 8000
 
 CMD ["gunicorn", "projeto_pokedex.wsgi:application", "--bind", "0.0.0.0:8000"]
+    

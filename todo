@@ -8,15 +8,16 @@ OBRIGATORIOS
 PRIORIDADE
 
 [x] docker compose
-[ ] usar django template para um frontend bom
+[x] usar django template para um frontend bom
 [x] usar postgresql
-[ ] usar jinja
-[ ] token de autenticação
+[x] usar jinja
+[x] token de autenticação
 
 ENDPOINTS
 
-[] POST   /pokebag/              → capturar/adicionar um Pokémon
-[] GET    /pokebag/              → listar todos os Pokémon da bag
-[] GET    /pokebag/{id}/         → ver detalhes de um Pokémon
-[] PUT    /pokebag/{id}/         → upar / editar o Pokémon
-[] DELETE /pokebag/{id}/         → soltar / deletar o Pokémon
+[x] POST   /pokebag/              → capturar/adicionar um Pokémon
+[x] GET    /pokebag/              → listar todos os Pokémon da bag
+[x] GET    /pokebag/{id}/         → ver detalhes de um Pokémon
+[x] PATCH    /pokebag/{id}/         → upar / editar o Pokémon
+[X] DELETE /pokebag/{id}/         → soltar / deletar o Pokémon
+
