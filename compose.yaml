@@ -1,0 +1,11 @@
+services:
+  desafiofabricasoftware:
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    ports:
+      - "8000:8000"
+    env_file:
+      - .env
+volumes:
+  postgres_data: # Isso garante que os dados do banco não sumam ao desligar

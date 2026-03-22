@@ -18,12 +18,12 @@ load_dotenv()
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'postgres',
-        'USER': 'postgres.gaanziqtkhndpmlkikyk',
-        'PASSWORD': 'pIDA2D2xzaXPr8pi',
-        'HOST': 'aws-1-us-east-1.pooler.supabase.com',
-        'PORT': '5432',
+        'ENGINE': 'django.db.backends.postgresql', # ou mysql
+        'NAME': os.environ.get('DB_NAME', 'nome_padrao'),
+        'USER': os.environ.get('DB_USER', 'user_padrao'),
+        'PASSWORD': os.environ.get('DB_PASS', 'senha_padrao'),
+        'HOST': os.environ.get('DB_HOST', 'db'), # No Docker, o HOST é o nome do serviço do banco
+        'PORT': os.environ.get('DB_PORT', '5432'),
     }
 }
 
