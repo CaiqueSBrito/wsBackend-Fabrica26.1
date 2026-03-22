@@ -57,13 +57,20 @@ INSTALLED_APPS = [
     'app_pokedex',
     'rest_framework',
     'django_filters',
+    'rest_framework.authtoken',
 ]
 
 REST_FRAMEWORK = {
+
     'DEFAULT_FILTER_BACKENDS': [
         'django_filters.rest_framework.DjangoFilterBackend',
         'rest_framework.filters.SearchFilter',
         'rest_framework.filters.OrderingFilter',
+    ],
+
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.TokenAuthentication',
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
     ]
 }
 

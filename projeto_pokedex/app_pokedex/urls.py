@@ -3,6 +3,8 @@ from django.urls import include, path
 from . import views
 from rest_framework import routers
 from django.conf.urls.static import static
+from rest_framework.authtoken.views import obtain_auth_token
+
 
 router = routers.DefaultRouter()
 router.register(r'pokebag', views.PokemonViewSet)
@@ -17,4 +19,5 @@ urlpatterns = [
     path('registro/', views.registro, name='registro'),
     path('login/', views.entrar, name='login'),
     path('logout/', views.sair, name='logout'),
+    path('api/token/', obtain_auth_token, name='api_token'),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

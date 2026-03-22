@@ -11,6 +11,11 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from django.http import JsonResponse
 from django.views.decorators.csrf import ensure_csrf_cookie
+from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.models import User
+from django.shortcuts import redirect
+from rest_framework.authtoken.models import Token
+
 
 def home(request):
     return render(request, 'app_pokedex/home.html')
@@ -18,9 +23,6 @@ def home(request):
 def pokemons_list(request):
     return render(request, 'app_pokedex/pokemons_list.html')
 
-from django.contrib.auth import authenticate, login, logout
-from django.contrib.auth.models import User
-from django.shortcuts import redirect
 
 import json
 
@@ -37,7 +39,8 @@ def registro(request):
 
         user = User.objects.create_user(username=username, email=email, password=senha)
         login(request, user)
-        return JsonResponse({'ok': True})
+        token, _ = Token.objects.get_or_create(user=user)
+        return JsonResponse({'ok': True, 'token': token.key})
 
     return render(request, 'app_pokedex/registro.html')
 
@@ -56,7 +59,8 @@ def entrar(request):
         user = authenticate(request, username=username, password=senha)
         if user:
             login(request, user)
-            return JsonResponse({'ok': True})
+            token, _ = Token.objects.get_or_create(user=user)
+            return JsonResponse({'ok': True, 'token': token.key})
         return JsonResponse({'erro': 'Senha incorreta'}, status=400)
 
     return render(request, 'app_pokedex/login.html')
