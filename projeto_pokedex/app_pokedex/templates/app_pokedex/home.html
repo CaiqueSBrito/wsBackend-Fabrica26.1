@@ -33,12 +33,19 @@
 
   <main class="container">
 
+    <section class="card" id="section-meus">
+      <div class="card-label">★</div>
+      <h2 class="card-title">Meus Pokémons</h2>
+      <div class="resultado-grid" id="meus-pokemons">
+        <p class="empty-msg">Carregando...</p>
+      </div>
+    </section>
+
     <section class="card" id="section-listar">
       <div class="card-label">01</div>
       <h2 class="card-title">Listar Pokémons</h2>
       <button class="btn btn-primary" onclick="window.location.href='/pokemons/'">
-      <span class="btn-icon">▶</span> Buscar todos
-      </button>
+        <span class="btn-icon">▶</span> Buscar todos
       </button>
       <div id="resultado-todos" class="resultado-grid"></div>
     </section>
@@ -70,14 +77,6 @@
         <span class="btn-icon">✦</span> Criar
       </button>
       <div id="resultado-criar"></div>
-    </section>
-
-    <section class="card" id="section-meus" style="grid-column: 1 / -1;">
-      <div class="card-label">★</div>
-      <h2 class="card-title">Meus Pokémons</h2>
-      <div class="resultado-grid" id="meus-pokemons">
-        <p class="empty-msg">Carregando...</p>
-      </div>
     </section>
 
     <section class="card" id="section-editar">
@@ -114,7 +113,7 @@
         </div>
         <div>
           <input class="input" type="number" id="editar-speed" placeholder="Velocidade">
-          <span id="aviso-editar-speed" class="aviso" style="display:none;"></span>       
+          <span id="aviso-editar-speed" class="aviso" style="display:none;"></span>
         </div>
         <div>
           <input class="input input-full" type="text" id="editar-abilities" placeholder="Habilidades">
@@ -138,6 +137,7 @@
       </button>
       <div id="resultado-deletar"></div>
     </section>
+
   </main>
 
   <script>
@@ -249,7 +249,7 @@
       const CSRF = document.cookie.split('; ').find(row => row.startsWith('csrftoken=')).split('=')[1];
       const RESPONSE = await fetch(`${BASE_URL}${ID}/`, { method: 'PATCH', body: FORM_DATA, headers: { 'X-CSRFToken': CSRF } });
       if (RESPONSE.status === 204) {
-        alert('Pokémon deletado com sucesso!');
+        alert('Pokémon editado com sucesso!');
       }
       const DATA = await RESPONSE.json();
     }

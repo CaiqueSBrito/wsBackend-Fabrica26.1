@@ -56,14 +56,6 @@ body {
   box-shadow: 0 0 12px var(--blue);
 }
 
-.aviso {
-  font-family: 'Press Start 2P', monospace !important;
-  font-size: 8px !important;
-  color: var(--red-light) !important;
-  grid-column: 1 / -1 !important;
-  display: block;
-}
-
 .logo-text {
   font-family: 'Press Start 2P', monospace;
   font-size: clamp(14px, 3vw, 22px);
@@ -77,11 +69,39 @@ body {
 /* ─── CONTAINER ─── */
 .container {
   max-width: 1200px;
-  margin: 40px auto;
+  margin: 32px auto;
   padding: 0 24px 60px;
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+  grid-template-columns: 1fr 360px;
+  grid-template-rows: auto;
+  grid-template-areas:
+    "meus listar"
+    "meus criar"
+    "meus editar"
+    "meus deletar";
   gap: 24px;
+  align-items: start;
+}
+
+#section-meus    { grid-area: meus;    order: 0; }
+#section-listar  { grid-area: listar;  order: 1; }
+#section-criar   { grid-area: criar;   order: 2; }
+#section-editar  { grid-area: editar;  order: 3; }
+#section-deletar { grid-area: deletar; order: 4; }
+
+/* Remove o inline style que quebrava o layout */
+#section-meus[style] { grid-column: unset !important; }
+
+@media (max-width: 900px) {
+  .container {
+    grid-template-columns: 1fr;
+    grid-template-areas:
+      "meus"
+      "listar"
+      "criar"
+      "editar"
+      "deletar";
+  }
 }
 
 /* ─── CARDS ─── */
@@ -129,7 +149,7 @@ body {
   line-height: 1.6;
 }
 
-#section-meus { grid-column: 1 / -1; }
+
 
 /* ─── FORM ─── */
 .form-grid {
@@ -605,7 +625,6 @@ input[type="file"]::file-selector-button {
   text-transform: capitalize;
   transition: border-color 0.2s, color 0.2s;
 }
-
 
 .paginacao {
   display: flex;
