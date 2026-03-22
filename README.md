@@ -1,4 +1,4 @@
-# Pokédex — Desafio Fábrica de Software
+# Pokédex — Desafio Fábrica de Software - Caique Brito
 
 API REST e interface web para gerenciamento de pokémons, com integração à PokeAPI e autenticação de usuários.
 
