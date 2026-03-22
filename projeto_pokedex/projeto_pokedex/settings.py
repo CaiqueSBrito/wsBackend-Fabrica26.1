@@ -13,7 +13,6 @@ import os
 from pathlib import Path
 import dj_database_url
 from dotenv import load_dotenv
-import rest_framework_simplejwt
 
 load_dotenv()
 
