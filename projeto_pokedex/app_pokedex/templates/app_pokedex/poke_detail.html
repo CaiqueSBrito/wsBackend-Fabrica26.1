@@ -26,8 +26,8 @@
 
       <div class="portrait-card">
         <div class="pokemon-img-wrap">
-          {% if pokemon.sprite_img %}
-            <img class="pokemon-img" src="{{ pokemon.sprite_img }}" alt="{{ pokemon.name }}" id="sprites">
+          {% if pokemon.sprites %}
+            <img class="pokemon-img" src="{{ pokemon.sprites }}" alt="{{ pokemon.name }}" id="sprites" data-url="{{ pokemon.sprites }}">
           {% else %}
             <div class="pokemon-no-img">SEM<br>SPRITE</div>
           {% endif %}
@@ -106,19 +106,20 @@
     const BASE_URL = '/api/pokebag/';
     const ID       = document.getElementById('id').textContent.replace('#', '').trim();
     const NAME     = document.getElementById('name').textContent.trim();
-    const SPRITE = document.getElementById('sprites')?.src || '';
+    const SPRITE   = document.getElementById('sprites')?.dataset.url || '';  // ← dataset.url não .src
     const TYPE1    = document.getElementById('type').textContent.trim();
     const TYPE2    = document.getElementById('type2')?.textContent.trim() || '';
     const HP       = document.getElementById('hp').textContent.trim();
     const ATTACK   = document.getElementById('attack').textContent.trim();
     const DEFENSE  = document.getElementById('defense').textContent.trim();
     const SPEED    = document.getElementById('speed').textContent.trim();
-    const ABILITIES = [...document.querySelectorAll('#abilities .ability-tag')].map(el => el.textContent.trim()).join(' ');
-
+    const ABILITIES = [...document.querySelectorAll('#abilities .ability-tag')]
+      .map(el => el.textContent.trim()).join(' ');
+    
     const FORM_DATA = new FormData();
     FORM_DATA.append('id', ID);
     FORM_DATA.append('name', NAME);
-    FORM_DATA.append('sprites', SPRITE);
+    FORM_DATA.append('sprites', SPRITE);  // ← campo 'sprites' bate com o model
     FORM_DATA.append('type1', TYPE1);
     FORM_DATA.append('type2', TYPE2);
     FORM_DATA.append('hp', HP);
@@ -126,13 +127,19 @@
     FORM_DATA.append('defense', DEFENSE);
     FORM_DATA.append('speed', SPEED);
     FORM_DATA.append('abilities', ABILITIES);
-
-    const CSRF = document.cookie.split('; ').find(row => row.startsWith('csrftoken='))?.split('=')[1] || '';
-    const RESPONSE = await fetch(BASE_URL, { method: 'POST', body: FORM_DATA, headers: { 'X-CSRFToken': CSRF }});
+    
+    const CSRF = document.cookie.split('; ')
+      .find(row => row.startsWith('csrftoken='))?.split('=')[1] || '';
+    
+    const RESPONSE = await fetch(BASE_URL, {
+      method: 'POST',
+      body: FORM_DATA,
+      headers: { 'X-CSRFToken': CSRF }
+    });
   
     const DATA = await RESPONSE.json();
     window.location.href = '/';
-  }
+}
   </script>
 </body>
 </html>

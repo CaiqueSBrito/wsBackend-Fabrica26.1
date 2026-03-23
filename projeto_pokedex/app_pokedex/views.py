@@ -73,16 +73,16 @@ def sair(request):
 def poke_detail(request, pokemon_id):
     data = requests.get(f'https://pokeapi.co/api/v2/pokemon/{pokemon_id}/').json()
     pokemon = {
-        'name':      data['name'],
-        'sprite_img': data['sprites']['front_default'],
-        'type1':     data['types'][0]['type']['name'],
-        'type2':     data['types'][1]['type']['name'] if len(data['types']) > 1 else '',
-        'hp':        next(s['base_stat'] for s in data['stats'] if s['stat']['name'] == 'hp'),
-        'attack':    next(s['base_stat'] for s in data['stats'] if s['stat']['name'] == 'attack'),
-        'defense':   next(s['base_stat'] for s in data['stats'] if s['stat']['name'] == 'defense'),
-        'speed':     next(s['base_stat'] for s in data['stats'] if s['stat']['name'] == 'speed'),
-        'abilities': ' '.join([a['ability']['name'] for a in data['abilities']]),
-        'id':        data['id'],
+        'name':     data['name'],
+        'sprites':  data['sprites']['other']['official-artwork']['front_default'] or data['sprites']['front_default'],
+        'type1':    data['types'][0]['type']['name'],
+        'type2':    data['types'][1]['type']['name'] if len(data['types']) > 1 else '',
+        'hp':       next(s['base_stat'] for s in data['stats'] if s['stat']['name'] == 'hp'),
+        'attack':   next(s['base_stat'] for s in data['stats'] if s['stat']['name'] == 'attack'),
+        'defense':  next(s['base_stat'] for s in data['stats'] if s['stat']['name'] == 'defense'),
+        'speed':    next(s['base_stat'] for s in data['stats'] if s['stat']['name'] == 'speed'),
+        'abilities':' '.join([a['ability']['name'] for a in data['abilities']]),
+        'id':       data['id'],
     }
     return render(request, 'app_pokedex/poke_detail.html', {'pokemon': pokemon})
 
