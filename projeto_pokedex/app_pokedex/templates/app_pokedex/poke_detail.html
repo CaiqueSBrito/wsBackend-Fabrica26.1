@@ -27,24 +27,29 @@
       <div class="portrait-card">
         <div class="pokemon-img-wrap">
           {% if pokemon.sprite_img %}
-            <img class="pokemon-img" src="{{ pokemon.sprite_img }}" alt="{{ pokemon.name }}">
+            <img class="pokemon-img" src="{{ pokemon.sprite_img }}" alt="{{ pokemon.name }}" id="sprites">
           {% else %}
             <div class="pokemon-no-img">SEM<br>SPRITE</div>
           {% endif %}
         </div>
 
-        <h2 class="pokemon-name-big">{{ pokemon.name }}</h2>
+        <h2 class="pokemon-name-big" id="name">{{ pokemon.name }}</h2>
 
         <div class="type-badges">
-          <span class="type-badge type-{{ pokemon.type1|lower }}">{{ pokemon.type1 }}</span>
+          <span class="type-badge type-{{ pokemon.type1|lower }}" id="type">{{ pokemon.type1 }}</span>
           {% if pokemon.type2 %}
-            <span class="type-badge type-{{ pokemon.type2|lower }}">{{ pokemon.type2 }}</span>
+            <span class="type-badge type-{{ pokemon.type2|lower }}" id="type2">{{ pokemon.type2 }}</span>
           {% endif %}
         </div>
 
-        <p class="id-badge">#{{ pokemon.id }}</p>
+        <p class="id-badge" id="id">#{{ pokemon.id }}</p>
       </div>
-
+      <div>
+        <button class="btn btn-primary btn-full" id="btn-cadastrar" type="button" onclick="registrar_pokemon()"> 
+        <span class="btn-icon">＋</span>
+        CAPTURAR POKÉMON
+        </button>
+      </div>
       <div class="stats-panel">
 
         <div class="info-card">
@@ -52,7 +57,7 @@
 
           <div class="stat-row">
             <span class="stat-label">HP</span>
-            <span class="stat-value">{{ pokemon.hp }}</span>
+            <span class="stat-value" id="hp">{{ pokemon.hp }}</span>
             <div class="stat-bar-wrap">
               <div class="stat-bar hp" style="width: {% widthratio pokemon.hp 255 100 %}%"></div>
             </div>
@@ -60,7 +65,7 @@
 
           <div class="stat-row">
             <span class="stat-label">ATAQUE</span>
-            <span class="stat-value">{{ pokemon.attack }}</span>
+            <span class="stat-value" id="attack">{{ pokemon.attack }}</span>
             <div class="stat-bar-wrap">
               <div class="stat-bar attack" style="width: {% widthratio pokemon.attack 255 100 %}%"></div>
             </div>
@@ -68,7 +73,7 @@
 
           <div class="stat-row">
             <span class="stat-label">DEFESA</span>
-            <span class="stat-value">{{ pokemon.defense }}</span>
+            <span class="stat-value", id="defense">{{ pokemon.defense }}</span>
             <div class="stat-bar-wrap">
               <div class="stat-bar defense" style="width: {% widthratio pokemon.defense 255 100 %}%"></div>
             </div>
@@ -76,7 +81,7 @@
 
           <div class="stat-row">
             <span class="stat-label">VELOC.</span>
-            <span class="stat-value">{{ pokemon.speed }}</span>
+            <span class="stat-value" id="speed">{{ pokemon.speed }}</span>
             <div class="stat-bar-wrap">
               <div class="stat-bar speed" style="width: {% widthratio pokemon.speed 255 100 %}%"></div>
             </div>
@@ -86,17 +91,48 @@
         {% if pokemon.abilities %}
         <div class="info-card">
           <p class="section-label">HABILIDADES</p>
-          <div class="abilities-list">
+          <div class="abilities-list" id="abilities">
             {% for ability in pokemon.abilities.split %}
               <span class="ability-tag">{{ ability }}</span>
             {% endfor %}
           </div>
         </div>
         {% endif %}
-
       </div>
     </div>
   </main>
+  <script>
+   async function registrar_pokemon() {
+    const BASE_URL = '/api/pokebag/';
+    const ID       = document.getElementById('id').textContent.replace('#', '').trim();
+    const NAME     = document.getElementById('name').textContent.trim();
+    const SPRITE = document.getElementById('sprites')?.src || '';
+    const TYPE1    = document.getElementById('type').textContent.trim();
+    const TYPE2    = document.getElementById('type2')?.textContent.trim() || '';
+    const HP       = document.getElementById('hp').textContent.trim();
+    const ATTACK   = document.getElementById('attack').textContent.trim();
+    const DEFENSE  = document.getElementById('defense').textContent.trim();
+    const SPEED    = document.getElementById('speed').textContent.trim();
+    const ABILITIES = [...document.querySelectorAll('#abilities .ability-tag')].map(el => el.textContent.trim()).join(' ');
 
+    const FORM_DATA = new FormData();
+    FORM_DATA.append('id', ID);
+    FORM_DATA.append('name', NAME);
+    FORM_DATA.append('sprites', SPRITE);
+    FORM_DATA.append('type1', TYPE1);
+    FORM_DATA.append('type2', TYPE2);
+    FORM_DATA.append('hp', HP);
+    FORM_DATA.append('attack', ATTACK);
+    FORM_DATA.append('defense', DEFENSE);
+    FORM_DATA.append('speed', SPEED);
+    FORM_DATA.append('abilities', ABILITIES);
+
+    const CSRF = document.cookie.split('; ').find(row => row.startsWith('csrftoken=')).split('=')[1];
+    const RESPONSE = await fetch(BASE_URL, { method: 'POST', body: FORM_DATA, headers: { 'X-CSRFToken': CSRF }});
+  
+    const DATA = await RESPONSE.json();
+    window.location.href = '/';
+  }
+  </script>
 </body>
 </html>

@@ -6,6 +6,7 @@ import uuid
 
 class Pokemon(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=True)
+    id_pokeapi = models.TextField(null=True, blank=True)
     usuario = models.ForeignKey(User, on_delete=models.CASCADE, related_name='pokemons')
     name = models.CharField(max_length=100)
     sprites = models.TextField(null=True, blank=True)

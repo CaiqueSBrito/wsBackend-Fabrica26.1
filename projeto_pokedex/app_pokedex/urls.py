@@ -13,7 +13,7 @@ urlpatterns = [
     path('', views.home, name='home'),
     path('api/', include(router.urls)),
     path('pokemon/<uuid:id>/', views.pokemon_details, name='pokemon_details'),
-    path('poke_list/', views.PokeAPIListView.as_view(), name='poke_list'),    
+    path('poke_list/', views.PokeAPIListView.as_view(), name='poke_list'),
     path('pokemons/', views.pokemons_list, name='pokemons_list'),
     path('pokemons/<int:pokemon_id>/', views.poke_detail, name='poke_detail'),
     path('registro/', views.registro, name='registro'),

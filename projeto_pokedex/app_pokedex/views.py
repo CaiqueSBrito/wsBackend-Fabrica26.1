@@ -69,6 +69,7 @@ def sair(request):
     logout(request)
     return redirect('login')
 
+
 def poke_detail(request, pokemon_id):
     data = requests.get(f'https://pokeapi.co/api/v2/pokemon/{pokemon_id}/').json()
     pokemon = {

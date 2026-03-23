@@ -277,13 +277,18 @@
         container.innerHTML = '<p class="empty-msg">Nenhum pokémon cadastrado ainda.</p>';
         return;
       }
-      container.innerHTML = pokemons.map(p => `
-        <a href="/pokemon/${p.id}/" class="pokemon-card">
-          ${p.sprite_img ? `<img src="${p.sprite_img}" alt="${p.name}">` : ''}
-          <span class="pokemon-name">${p.name}</span>
-          <span class="pokemon-type">${p.type1}${p.type2 ? ' / ' + p.type2 : ''}</span>
-        </a>
-      `).join('');
+      container.innerHTML = pokemons.map(p => {
+        const sprite = p.sprite_img
+          ? (p.sprite_img.startsWith('http') ? p.sprite_img : `http://127.0.0.1:8000${p.sprite_img}`)
+          : p.sprites || null;
+        return `
+          <a href="/pokemon/${p.id}/" class="pokemon-card">
+            ${sprite ? `<img src="${sprite}" alt="${p.name}">` : ''}
+            <span class="pokemon-name">${p.name}</span>
+            <span class="pokemon-type">${p.type1}${p.type2 ? ' / ' + p.type2 : ''}</span>
+          </a>
+        `;
+      }).join('');
     }
 
     carregarMeusPokemons();
