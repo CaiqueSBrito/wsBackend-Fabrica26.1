@@ -153,9 +153,6 @@ class PokemonViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAuthenticatedOrReadOnly]
     queryset = Pokemon.objects.all()
     serializer_class = PokemonSerializer
-    filterset_fields = ['type1', 'type2']
-    search_fields = ['name']
-    ordering_fields = ['hp', 'attack', 'defense', 'speed']
 
     def perform_create(self, serializer):
         serializer.save(usuario=self.request.user)
