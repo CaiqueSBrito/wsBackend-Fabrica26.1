@@ -14,6 +14,15 @@ API REST e interface web para gerenciamento de pokémons, com integração à Po
 
 ---
 
+## Screenshots
+
+<img width="1919" height="943" alt="image" src="https://github.com/user-attachments/assets/cc56a91a-6842-4083-b44d-25f05912c258" />
+<img width="1919" height="921" alt="image" src="https://github.com/user-attachments/assets/de19fa9c-7393-4ef3-8924-936c2670e8de" />
+<img width="1919" height="945" alt="image" src="https://github.com/user-attachments/assets/6fa75812-05f2-480b-81b7-2f5558f6f9ff" />
+
+
+---
+
 ## Requisitos
 
 - Python 3.12+
